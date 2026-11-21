@@ -1,0 +1,16 @@
+{
+  "name": "ec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sec0218tc-tech/EC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sec0218tc-tech/EC/issues"
+  },
+  "homepage": "https://github.com/sec0218tc-tech/EC#readme",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/server": "^1.9.2"
+  }
+}
