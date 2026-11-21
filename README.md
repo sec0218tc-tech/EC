@@ -36,10 +36,12 @@ curl -H "Authorization: Bearer <사용자 access_token>" \
 
 토큰이 없거나 잘못되면 401 이 돌아옵니다.
 
-## AI 코딩 스킬 (선택)
+## AI 코딩 스킬
+
+`supabase/server` 스킬은 이미 이 저장소의 `.claude/skills/supabase-server/` 에 들어 있습니다.
+저장소를 여는 Claude Code 세션이면 (클라우드든 로컬이든) 자동으로 이 스킬을 씁니다.
+따로 개인 컴퓨터에 설치할 필요가 없습니다. 업데이트가 필요하면 저장소 폴더에서:
 
 ```bash
-npx skills add supabase/server
+npx skills add supabase/server -a claude-code -y
 ```
-
-저장소 폴더 안에서 실행하면 그 프로젝트에만 설치됩니다.
