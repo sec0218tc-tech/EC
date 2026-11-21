@@ -1,5 +1,19 @@
 # EC
 
+## 임상 케이스 연습 사이트 (`web/`)
+
+문진 → 신체검사(TPR·혈압·탈수 등) → 추가검사(CBC·화학검사 등) → 진단(객관식) → 처치 → 해설 순서로 소동물 임상 추론을 연습하는 정적 웹앱입니다. 빌드 과정 없이 HTML/JS/JSON 만 씁니다.
+
+```bash
+npx serve web        # 또는: cd web && python3 -m http.server 8000
+```
+
+- 케이스 추가: `web/cases/<id>.json` 을 만들고 `web/cases/index.json` 에 한 줄 추가 (기존 3개 파일을 형식 예시로 참고)
+- `key: true` 항목은 꼭 해야 할 문진·검사, `unneeded: true` 검사는 불필요 검사로 채점됩니다.
+- 진행 결과(점수)는 브라우저 localStorage 에만 저장됩니다. Supabase 저장은 추후 확장 가능.
+
+## Supabase 백엔드
+
 Supabase 백엔드 (`@supabase/server` 사용).
 
 ## 구성
