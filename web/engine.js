@@ -100,8 +100,10 @@ export function score(catalog, c, s) {
   const rules = Object.entries(T.after || {}).filter(([id]) => done.includes(id));
   if (Object.keys(T.after || {}).length) {
     const bad = rules.filter(([id, pre]) => pre.some(p => !done.includes(p) || done.indexOf(p) > done.indexOf(id)));
-    add('order', '검사 순서', rules.length ? 1 - bad.length / rules.length : 0,
-      !rules.length ? '순서를 평가할 확진 검사를 하지 않았어요.'
+    // 순서 규칙이 선택 검사에만 걸려 있고 그 검사를 안 했으면 감점하지 않는다.
+    const missedRequiredRule = Object.keys(T.after).some(id => T.required.includes(id));
+    add('order', '검사 순서', rules.length ? 1 - bad.length / rules.length : missedRequiredRule || !done.length ? 0 : 1,
+      !rules.length ? (missedRequiredRule ? '순서를 평가할 확진 검사를 하지 않았어요.' : '순서를 따질 검사가 없었어요.')
         : bad.length ? bad.map(([id, pre]) => `${name(id)}보다 ${pre.map(name).join(', ')}을(를) 먼저 했어야 해요`).join(' · ')
           : '기본 검사 후 확진 검사 순서가 적절했어요.');
   }
