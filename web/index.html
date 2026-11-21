@@ -2,19 +2,15 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
   <title>임상 케이스 연습</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <a href="#" class="brand">🩺 임상 케이스 연습</a>
-    <span class="sub">소동물 임상 추론 트레이닝</span>
-  </header>
+  <header class="top"><a href="#" class="brand">🩺 임상 케이스 연습</a></header>
   <main id="app"><p class="muted">불러오는 중…</p></main>
-  <footer class="foot">
-    교육용 가상 증례입니다. 참고범위·용량은 기관과 장비마다 다르며, 실제 진료 판단은 지도 수의사와 최신 문헌을 따르세요.
-  </footer>
-  <script src="app.js"></script>
+  <div id="sheet-root"></div>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

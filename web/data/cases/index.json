@@ -1,0 +1,47 @@
+[
+ {
+  "id": "cat-urethral-obstruction",
+  "title": "화장실에서 계속 힘만 줘요",
+  "species": "c",
+  "difficulty": "초급",
+  "emergency": true,
+  "verified": false,
+  "sig": "코리안 숏헤어 · 4세 · 수컷 (중성화 완료)"
+ },
+ {
+  "id": "cpv-puppy",
+  "title": "어제부터 피 섞인 설사를 하고 토해요",
+  "species": "d",
+  "difficulty": "초급",
+  "emergency": true,
+  "verified": false,
+  "sig": "포메라니안 · 3개월령 · 수컷 (중성화 안 함)"
+ },
+ {
+  "id": "foreign-body-corgi",
+  "title": "밥을 안 먹고 먹기만 하면 토해요",
+  "species": "d",
+  "difficulty": "초급",
+  "emergency": false,
+  "verified": false,
+  "sig": "웰시코기 · 1세 4개월 · 수컷 (중성화 완료)"
+ },
+ {
+  "id": "pancreatitis-schnauzer",
+  "title": "어제부터 계속 토하고 배를 웅크려요",
+  "species": "d",
+  "difficulty": "고급",
+  "emergency": false,
+  "verified": false,
+  "sig": "미니어처 슈나우저 · 9세 · 암컷 (중성화 완료)"
+ },
+ {
+  "id": "pyometra-maltese",
+  "title": "기운이 없고 물을 엄청 많이 마셔요",
+  "species": "d",
+  "difficulty": "초급",
+  "emergency": false,
+  "verified": false,
+  "sig": "말티즈 · 8세 · 암컷 (중성화 안 함)"
+ }
+]
