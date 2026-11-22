@@ -20,6 +20,15 @@ const index = JSON.parse(readFileSync(new URL('cases/index.json', dir)));
   assert.equal(E.answerOf(catalog, c, 'meds').flag, false);
   assert.equal(E.answerOf(catalog, c, 'urine').flag, false); }
 
+// 검사 순서: 선행 먼저 1, 순서 바뀜 0.5, 선행 안 함 0, 확진 검사를 안 했으면 항목 없음
+{ const c = JSON.parse(readFileSync(new URL('cases/mmvd-maltese.json', dir)));
+  const order = ordered => E.score(catalog, c, { ...E.newState(), ordered }).items.find(x => x.key === 'order')?.frac;
+  assert.equal(order(['xrthorax', 'echo']), 1);
+  assert.equal(order(['echo', 'xrthorax']), 0.5);
+  assert.equal(order(['echo']), 0);
+  assert.equal(order(['xrthorax']), undefined);
+  assert.equal(order([]), undefined); }
+
 // flagOf 기본 동작
 assert.equal(E.flagOf('42.6', '5.05–16.76'), 'H');
 assert.equal(E.flagOf('1.2', '5.05–16.76'), 'L');

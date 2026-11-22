@@ -97,15 +97,16 @@ export function score(catalog, c, s) {
   add('required', '필수 검사', T.required.length ? 1 - missedT.length / T.required.length : 1,
     missedT.length ? `빠진 필수 검사: ${missedT.map(name).join(', ')}` : '필수 검사를 모두 했어요.');
 
+  // 검사 순서: 확진 검사마다 선행 검사를 먼저 했으면 1, 했지만 나중에 했으면 0.5, 안 했으면 0.
+  // 확진 검사를 아예 안 했으면 따질 순서가 없으니 이 항목은 빼고 채점한다 (빠진 검사는 '필수 검사'에서 이미 감점).
   const rules = Object.entries(T.after || {}).filter(([id]) => done.includes(id));
-  if (Object.keys(T.after || {}).length) {
-    const bad = rules.filter(([id, pre]) => pre.some(p => !done.includes(p) || done.indexOf(p) > done.indexOf(id)));
-    // 순서 규칙이 선택 검사에만 걸려 있고 그 검사를 안 했으면 감점하지 않는다.
-    const missedRequiredRule = Object.keys(T.after).some(id => T.required.includes(id));
-    add('order', '검사 순서', rules.length ? 1 - bad.length / rules.length : missedRequiredRule || !done.length ? 0 : 1,
-      !rules.length ? (missedRequiredRule ? '순서를 평가할 확진 검사를 하지 않았어요.' : '순서를 따질 검사가 없었어요.')
-        : bad.length ? bad.map(([id, pre]) => `${name(id)}보다 ${pre.map(name).join(', ')}을(를) 먼저 했어야 해요`).join(' · ')
-          : '기본 검사 후 확진 검사 순서가 적절했어요.');
+  if (rules.length) {
+    const at = id => done.indexOf(id);
+    const preScore = (id, p) => (!done.includes(p) ? 0 : at(p) < at(id) ? 1 : 0.5);
+    const frac = rules.reduce((a, [id, pre]) => a + pre.reduce((b, p) => b + preScore(id, p), 0) / pre.length, 0) / rules.length;
+    const late = rules.flatMap(([id, pre]) => pre.filter(p => preScore(id, p) === 0.5).map(p => `${name(p)} → ${name(id)} 순서가 바뀌었어요`));
+    const skipped = rules.flatMap(([id, pre]) => pre.filter(p => !done.includes(p)).map(p => `${name(id)} 전에 ${name(p)}을(를) 했어야 해요`));
+    add('order', '검사 순서', frac, [...skipped, ...late].join(' · ') || '기본 검사 후 확진 검사 순서가 적절했어요.');
   }
 
   const ok = new Set([...T.required, ...(T.useful || [])]);
