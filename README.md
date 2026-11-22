@@ -16,6 +16,7 @@ node web/test/check.mjs                   # 케이스 데이터 검사 + 채점 
 - `web/data/fees.json` — 진료비 기준: 전국 동물병원 진료비 현황(2025년, [동물병원 진료비용 현황 조사](https://animalclinicfee.or.kr/info/payInfo.do))의 **중간값**. 진찰료, CBC, 혈액화학, 전해질, 방사선, 초음파, CT 가 여기서 온 값이고(앱에 "✓ 비용 기준 확인"), 영상검사는 환자 체중 구간(5/10/20kg)별 값을 씁니다. 표에 없는 검사는 `catalog.json` 의 cost 를 "추정치"로 씁니다. 보호자 예산은 케이스의 `budget`, 없으면 진찰료+필수 검사 비용의 1.3배(만 원 단위 올림)이고, 넘으면 '비용·예산' 점수가 깎입니다.
 - `web/data/cases/<id>.json` — 케이스. 공통 메뉴와 **다른 것만** 적습니다. 적지 않은 검사는 정상 결과가 나오고, 수치는 참고범위로 H/L 이 자동 표시됩니다.
 - `web/engine.js` — 데이터 해석과 채점, `web/app.js` — 화면, `web/ai.js`·`web/config.js` — AI 서버 호출
+- `web/notebook.js` — 오답 노트 기록과 약점 분석(단계별·질환 계통별, 다시 풀 케이스 추천), `web/notes-view.js` — 오답 노트 화면(`#/notes`), `web/notes-store.js` — 저장소(지금은 이 기기 localStorage, 계정을 붙이면 이 파일만 교체). 새 케이스는 `notebook.js` 의 `SYSTEM` 에 계통을 적어야 검사를 통과합니다.
 
 ### 케이스 추가
 1. 기존 케이스(예: `pancreatitis-schnauzer.json`)를 복사해 고칩니다.

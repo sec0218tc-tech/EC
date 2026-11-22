@@ -2,6 +2,9 @@
 import * as E from './engine.js';
 import { askOwner, judgePersuasion, getCode, setCode } from './ai.js';
 import { patientArt } from './art.js';
+import { attemptFrom } from './notebook.js';
+import { saveAttempt, loadAttempts } from './notes-store.js';
+import { renderNotes } from './notes-view.js';
 
 const STEPS = ['접수', '문진', '신체검사', '문제 목록', '1차 감별진단', '추가검사', '확정진단', '처치', '결과'];
 const RESULTS_KEY = 'ec2-results';
@@ -74,6 +77,7 @@ async function boot() {
 async function route() {
   const id = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
   sheetOpen = false; askMore = false;
+  if (id === 'notes') { C = null; sheetRoot.replaceChildren(); app.classList.remove('wide'); document.documentElement.classList.remove('charting'); return renderNotes(app, h, index); }
   if (!id || !index.some(c => c.id === id)) { C = null; return renderHome(); }
   if (!C || C.id !== id) {
     C = await fetch(`data/cases/${id}.json`).then(r => r.json());
@@ -85,13 +89,16 @@ async function route() {
 }
 
 // ---------- 홈 ----------
-function renderHome() {
+async function renderHome() {
   sheetRoot.replaceChildren();
   app.classList.remove('wide');
   const results = store.get(RESULTS_KEY, {});
   const byLevel = groupBy(index, c => c.difficulty);
+  const tried = new Set((await loadAttempts()).map(a => a.id)).size;
+  if (location.hash.replace(/^#\/?/, '')) return; // 기록을 읽는 사이 다른 화면으로 갔으면 그리지 않는다
   app.replaceChildren(...[
     h('p', { class: 'muted' }, '한 환자를 실제 진료 순서대로 끝까지 봅니다. 접수, 문진, 신체검사, 감별, 검사, 진단, 처치. 검사 메뉴는 모든 케이스에서 같습니다.'),
+    tried > 0 && h('a', { class: 'btn notes-link', href: '#/notes' }, h('span', null, '오답 노트 · 약점 분석'), h('span', { class: 'muted small' }, `${tried}개 케이스 →`)),
     catalog.ui.difficulty.map(level => byLevel.has(level) && [
       h('h2', null, level === '초급' ? '초급 · 전형적 증례' : '고급 · 동반 질환과 보호자 거부'),
       h('div', { class: 'list' }, byLevel.get(level).map((c, i) => {
@@ -432,6 +439,7 @@ function finish() {
   const all = store.get(RESULTS_KEY, {});
   all[C.id] = { score: r.total, at: new Date().toISOString() };
   store.set(RESULTS_KEY, all);
+  saveAttempt(attemptFrom(catalog, C, S, r));
 }
 
 // 결과 첫 화면은 공부 앱처럼 친근하게: 점수대별 한마디 + 가장 잘한 항목과 가장 아쉬운 항목.
@@ -487,6 +495,7 @@ function renderResult() {
     h('div', { class: 'nav' },
       h('button', { class: 'btn ghost', onclick: () => { store.del('ec2-state-' + C.id); S = E.newState(); view = 0; render(); } }, '처음부터 다시'),
       h('a', { class: 'btn primary', href: '#' }, '케이스 목록')),
+    h('a', { class: 'btn notes-link', href: '#/notes' }, h('span', null, '오답 노트 · 약점 분석'), h('span', { class: 'muted small' }, '→')),
   ];
 }
 
