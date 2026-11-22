@@ -1,6 +1,7 @@
 // 임상 케이스 연습: 화면. 데이터 해석과 채점은 engine.js.
 import * as E from './engine.js';
 import { askOwner, judgePersuasion, getCode, setCode } from './ai.js';
+import { patientArt } from './art.js';
 
 const STEPS = ['접수', '문진', '신체검사', '문제 목록', '1차 감별진단', '추가검사', '확정진단', '처치', '결과'];
 const RESULTS_KEY = 'ec2-results';
@@ -80,13 +81,14 @@ function renderHome() {
   const results = store.get(RESULTS_KEY, {});
   const byLevel = groupBy(index, c => c.difficulty);
   app.replaceChildren(...[
-    h('p', { class: 'muted' }, '접수부터 문진, 신체검사, 감별진단, 추가검사, 확정진단, 처치까지 실제 진료 순서대로 진행해요. 검사 메뉴는 모든 케이스가 같으니 선지에서 답을 짐작할 수 없어요.'),
+    h('p', { class: 'muted' }, '한 환자를 실제 진료 순서대로 끝까지 봅니다. 접수, 문진, 신체검사, 감별, 검사, 진단, 처치. 검사 메뉴는 모든 케이스에서 같습니다.'),
     catalog.ui.difficulty.map(level => byLevel.has(level) && [
-      h('h2', null, level === '초급' ? '초급 · 전형적인 증상' : '고급 · 동반 질환, 보호자 거부'),
-      h('div', { class: 'list' }, byLevel.get(level).map(c => {
+      h('h2', null, level === '초급' ? '초급 · 전형적 증례' : '고급 · 동반 질환과 보호자 거부'),
+      h('div', { class: 'list' }, byLevel.get(level).map((c, i) => {
         const r = results[c.id];
         const inProgress = store.get('ec2-state-' + c.id, null);
-        return h('a', { class: 'card case', href: '#/' + c.id },
+        return h('a', { class: 'case', href: '#/' + c.id },
+          h('span', { class: 'folio' }, String(i + 1).padStart(2, '0')),
           h('div', { class: 'tags' },
             h('span', { class: 'tag' }, spName(c.species)),
             c.emergency && h('span', { class: 'tag warn' }, '응급'),
@@ -98,7 +100,7 @@ function renderHome() {
     ]),
     h('details', { class: 'card settings' },
       h('summary', null, 'AI 접속 코드'),
-      h('p', { class: 'muted small' }, '자유 질문과 보호자 설득 판정에 쓰는 코드예요. 이 기기에만 저장돼요.'),
+      h('p', { class: 'muted small' }, '자유 질문과 보호자 설득 판정에 씁니다. 이 기기에만 저장됩니다.'),
       h('form', { class: 'row', onsubmit: e => { e.preventDefault(); setCode(e.target.code.value.trim()); e.target.querySelector('button').textContent = '저장됨 ✓'; } },
         h('input', { name: 'code', type: 'password', value: getCode(), placeholder: '접속 코드', autocomplete: 'off' }),
         h('button', { class: 'btn' }, '저장'))),
@@ -111,12 +113,13 @@ function render() {
     class: (i === view ? 'on ' : '') + (i <= S.step ? 'reach' : ''),
     disabled: i > S.step,
     onclick: () => { view = i; render(); },
-  }, `${i + 1}. ${name}`)));
+  }, h('span', { class: 'n' }, String(i + 1).padStart(2, '0')), name)));
   const body = [renderIntake, renderHistory, renderExam, renderProblems, renderDdx1, renderTests, renderFinal, renderTx, renderResult][view]();
   app.replaceChildren(
     h('div', { class: 'case-head' },
       h('a', { href: '#', class: 'back' }, '← 목록'),
-      h('b', null, C.title)),
+      h('b', null, C.title),
+      h('span', { class: 'folio' }, `${String(view + 1).padStart(2, '0')}/${String(STEPS.length).padStart(2, '0')}`)),
     stepper,
     h('section', { class: 'panel' }, body),
   );
@@ -144,11 +147,13 @@ const locked = step => S.step > step; // 다음 단계로 넘어가면 그 단�
 // ---------- 0. 접수 ----------
 function renderIntake() {
   return [
+    h('figure', { class: 'patient' }, patientArt(C.species),
+      h('figcaption', null, h('b', null, C.signalment['품종'] || spName(C.species)), h('span', null, [spName(C.species), C.signalment['나이']].filter(Boolean).join(' · ')))),
     h('h2', null, '접수'),
     h('dl', { class: 'sig' }, h('dt', null, '종'), h('dd', null, spName(C.species)),
       Object.entries(C.signalment).map(([k, v]) => [h('dt', null, k), h('dd', null, v)])),
-    h('div', { class: 'bubble a' }, h('span', { class: 'who' }, '보호자'), C.cc),
-    C.emergency && h('p', { class: 'note warn' }, '응급 내원 케이스예요. 처치 단계에서 먼저 할 처치의 순서도 채점해요.'),
+    h('div', { class: 'bubble a' }, C.cc),
+    C.emergency && h('p', { class: 'note warn' }, '응급 내원. 처치 단계에서 초기 처치 순서도 평가합니다.'),
     next('문진 시작'),
   ];
 }
@@ -173,13 +178,13 @@ function renderHistory() {
     busy = false; render();
     document.querySelector('.free input')?.focus();
   } },
-  h('input', { name: 'q', placeholder: '직접 질문하기 (AI 보호자가 답해요)', autocomplete: 'off', enterkeyhint: 'send' }),
+  h('input', { name: 'q', placeholder: '직접 질문 입력 (AI 보호자가 답합니다)', autocomplete: 'off', enterkeyhint: 'send' }),
   h('button', { class: 'btn' }, '질문'));
 
   return [
     h('h2', null, '문진'),
-    h('p', { class: 'muted small' }, '질문을 골라 보호자에게 물어보세요. 꼭 필요한 질문을 했는지는 마지막에 채점돼요.'),
-    h('div', { class: 'chat' }, log.length ? log : h('p', { class: 'muted small' }, '아직 질문하지 않았어요.')),
+    h('p', { class: 'muted small' }, '보호자에게 물을 질문을 고르세요. 핵심 질문을 빠뜨리면 감점됩니다.'),
+    h('div', { class: 'chat' }, log.length ? log : h('p', { class: 'muted small' }, '기록된 문진이 없습니다.')),
     form,
     [...groupBy(catalog.questions, q => q.cat)].map(([cat, qs]) => [
       h('h3', null, cat),
@@ -207,7 +212,7 @@ function renderExam() {
   const items = catalog.exam;
   return [
     h('h2', null, '신체검사'),
-    h('p', { class: 'muted small' }, '시행할 항목을 누르세요. 결과는 아래와 진료 기록에 쌓여요.'),
+    h('p', { class: 'muted small' }, '시행할 항목을 누르세요. 소견은 진료 기록에 남습니다.'),
     [...groupBy(items, e => e.cat)].map(([cat, es]) => [
       h('h3', null, cat),
       h('div', { class: 'exam-list' }, es.map(e => {
@@ -229,8 +234,8 @@ function renderProblems() {
   const lock = locked(3);
   return [
     h('h2', null, '문제 목록 (Problem list)'),
-    h('p', { class: 'muted small' }, '문진과 신체검사에서 확인한 이상 소견을 모두 고르세요. 근거 없는 항목을 고르면 감점돼요.'),
-    lock && h('p', { class: 'note' }, '다음 단계로 넘어가서 수정할 수 없어요.'),
+    h('p', { class: 'muted small' }, '문진과 신체검사에서 확인한 이상 소견을 모두 고르세요. 근거 없는 항목은 감점됩니다.'),
+    lock && h('p', { class: 'note' }, '다음 단계로 넘어가 수정할 수 없습니다.'),
     h('div', { class: 'chips' }, shuffled(probs.length, C.id + 'p').map(i => h('button', {
       class: 'chip' + (S.problems.includes(i) ? ' sel' : ''), disabled: lock,
       onclick: () => { S.problems = toggle(S.problems, i); render(); },
@@ -250,8 +255,8 @@ function renderDdx1() {
   const lock = locked(4);
   return [
     h('h2', null, '1차 감별진단'),
-    h('p', { class: 'muted small' }, '지금까지 정보로 가능성 있는 진단을 모두 고르세요. 꼭 들어가야 할 것을 빠뜨리거나 가능성이 낮은 것을 넣으면 감점돼요. 추가검사 뒤에 목록을 고칠 수 있어요.'),
-    lock && h('p', { class: 'note' }, '1차 목록은 고정됐어요. 확정진단 단계에서 수정할 수 있어요.'),
+    h('p', { class: 'muted small' }, '지금까지의 정보로 가능한 진단을 모두 고르세요. 필수 감별을 빠뜨리거나 가능성 낮은 진단을 넣으면 감점됩니다. 검사 후 수정할 수 있습니다.'),
+    lock && h('p', { class: 'note' }, '1차 목록은 고정됐습니다. 확정진단 단계에서 수정하세요.'),
     dxChips(S.ddx1, i => { S.ddx1 = toggle(S.ddx1, i); render(); }, lock),
     next('추가검사로'),
   ];
@@ -273,7 +278,7 @@ function resultCard(id, open) {
   return h('details', { class: 'result', open },
     h('summary', null, h('b', null, r.name), (r.rows?.some(x => x.flag) || r.textFlag) && h('span', { class: 'tag warn tiny' }, '이상')),
     r.rows && h('table', null, h('tbody', null, r.rows.map(x => h('tr', { class: x.flag ? 'abn' : '' },
-      h('td', null, x.n), h('td', { class: 'v' }, x.v, x.flag && x.flag !== 'A' ? ` ${x.flag}` : ''), h('td', { class: 'muted' }, [x.u, x.ref && `(${x.ref})`].filter(Boolean).join(' ')))))),
+      h('td', null, x.n), h('td', { class: 'v' }, x.v, x.flag && h('span', { class: 'flag' }, x.flag === 'A' ? '이상' : x.flag)), h('td', { class: 'muted' }, [x.u, x.ref && `(${x.ref})`].filter(Boolean).join(' ')))))),
     r.text && h('p', { class: r.textFlag ? 'abn-text' : '' }, r.text),
     r.note && h('p', { class: 'muted small' }, r.note));
 }
@@ -287,7 +292,7 @@ function renderPersuade() {
     h('div', { class: 'bubble a' }, R.owner),
     log,
     st.offline ? [
-      h('p', { class: 'muted small' }, 'AI 판정을 쓸 수 없어 모범 답안으로 스스로 판정해요.'),
+      h('p', { class: 'muted small' }, 'AI 판정을 쓸 수 없습니다. 모범 답안과 비교해 직접 판정하세요.'),
       h('div', { class: 'note' }, h('b', null, '모범 설득 예시: '), R.model),
       h('div', { class: 'row' },
         h('button', { class: 'btn primary', onclick: () => { st.attempts++; st.passed = true; st.open = false; orderTest(R.test); } }, '내 설득이 이만큼 됐어요'),
@@ -318,7 +323,7 @@ function renderTests() {
   const recent = [...S.ordered].reverse();
   return [
     h('h2', null, '추가검사'),
-    h('p', { class: 'muted small' }, '필요한 검사를 순서대로 고르세요. 기본 검사 후 확진 검사 순서, 불필요한 검사도 채점돼요.'),
+    h('p', { class: 'muted small' }, '필요한 검사를 순서대로 오더하세요. 기본 검사에서 확진 검사로 가는 순서와 불필요한 검사도 평가합니다.'),
     h('div', { class: 'cost' }, `누적 비용 ${E.fmtWon(totalCost())} · ${S.ordered.length}개 시행`),
     S.refusal.open && C.refusal && renderPersuade(),
     recent.length > 0 && h('div', { class: 'results' }, h('h3', null, '검사 결과'), recent.map(id => resultCard(id, id === S.lastTest))),
@@ -343,8 +348,8 @@ function renderFinal() {
     h('p', { class: 'muted small' }, '검사 결과를 보고 남길 감별진단만 고르세요.'),
     dxChips(S.ddx2, i => { S.ddx2 = toggle(S.ddx2, i); render(); }, lock),
     h('h2', null, '확정진단'),
-    h('p', { class: 'muted small' }, '최종 진단을 고르세요. 동반 질환이 있으면 정답이 여러 개일 수 있어요.'),
-    lock && h('p', { class: 'note' }, '확정진단은 고정됐어요.'),
+    h('p', { class: 'muted small' }, '최종 진단을 고르세요. 동반 질환이 있으면 여러 개를 고릅니다.'),
+    lock && h('p', { class: 'note' }, '확정진단은 고정됐습니다.'),
     dxChips(S.final, i => { S.final = toggle(S.final, i); render(); }, lock),
     next('처치로'),
   ];
@@ -356,8 +361,8 @@ function renderTx() {
   const P = C.priority;
   return [
     h('h2', null, '처치 계획'),
-    h('p', { class: 'muted small' }, '항목마다 해당하는 처치를 모두 고르세요. 부적절한 처치는 감점돼요.'),
-    lock && h('p', { class: 'note' }, '처치는 고정됐어요.'),
+    h('p', { class: 'muted small' }, '항목마다 해당하는 처치를 모두 고르세요. 부적절한 처치는 감점됩니다.'),
+    lock && h('p', { class: 'note' }, '처치 계획은 고정됐습니다.'),
     C.tx.map((g, gi) => [
       h('h3', null, g.group),
       h('div', { class: 'opts' }, shuffled(g.options.length, C.id + g.group).map(oi => h('button', {
@@ -367,7 +372,7 @@ function renderTx() {
     ]),
     P && [
       h('h3', null, '응급: 먼저 할 처치 순서'),
-      h('p', { class: 'muted small' }, '먼저 할 것부터 차례로 누르세요. 다시 누르면 빠져요.'),
+      h('p', { class: 'muted small' }, '먼저 할 것부터 차례로 누르세요. 다시 누르면 빠집니다.'),
       h('div', { class: 'opts' }, shuffled(P.steps.length, C.id + 'pr').map(i => {
         const pos = S.priority.indexOf(i);
         return h('button', { class: 'opt' + (pos >= 0 ? ' sel' : ''), disabled: lock, onclick: () => { S.priority = toggle(S.priority, i); render(); } },
@@ -386,12 +391,28 @@ function finish() {
   store.set(RESULTS_KEY, all);
 }
 
+// 결과 첫 화면은 공부 앱처럼 친근하게: 점수대별 한마디 + 가장 잘한 항목과 가장 아쉬운 항목.
+function coach(r) {
+  const by = [...r.items].sort((a, b) => b.frac - a.frac);
+  const best = by[0], worst = by[by.length - 1];
+  const head = r.total >= 80 ? '훌륭해요! 실제 진료였어도 보호자가 안심했을 거예요.'
+    : r.total >= 60 ? '잘 따라왔어요. 몇 군데만 다듬으면 돼요.'
+    : r.total >= 40 ? '절반은 왔어요. 아래 해설로 빈칸을 채워 봐요.'
+    : '오늘은 배우는 날이에요. 해설을 천천히 읽어 봐요.';
+  return h('section', { class: 'coach' },
+    h('div', { class: 'coach-art' }, patientArt(C.species)),
+    h('p', { class: 'coach-head' }, head),
+    best.frac >= 0.6 && h('p', null, h('b', null, '잘한 점 '), `${best.label} 항목이 가장 좋았어요 (${best.pts}/${best.max}).`),
+    worst.frac < 1 && h('p', null, h('b', null, '다음엔 '), `${worst.label}: ${worst.detail}`));
+}
+
 const ROLE = { final: '확정진단', must: '꼭 넣을 감별', ok: '고려 가능', no: '가능성 낮음' };
 function renderResult() {
   const r = E.score(catalog, C, S);
   const T = C.testing;
   const tname = id => catalog.tests.find(t => t.id === id).name;
   return [
+    coach(r),
     h('div', { class: 'score' }, h('div', { class: 'big' }, r.total), h('div', null, '점 / 100')),
     h('div', { class: 'items' }, r.items.map(x => h('div', { class: 'item' },
       h('div', { class: 'row between' }, h('b', null, x.label), h('span', null, `${x.pts} / ${x.max}`)),
@@ -458,4 +479,4 @@ function alertNote(msg) {
   setTimeout(() => n.remove(), 4000);
 }
 
-boot().catch(err => { app.replaceChildren(h('p', { class: 'note warn' }, '데이터를 불러오지 못했어요: ' + err.message)); });
+boot().catch(err => { app.replaceChildren(h('p', { class: 'note warn' }, '데이터를 불러오지 못했습니다: ' + err.message)); });
