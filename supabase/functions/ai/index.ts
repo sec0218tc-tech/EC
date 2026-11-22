@@ -7,7 +7,9 @@
 // publishable 키는 공개 키라 누구나 호출할 수 있으므로, 요금 남용을 막기 위해 APP_CODE(접속 코드)를 함께 검사한다.
 import { withSupabase } from 'npm:@supabase/server@1'
 
-const MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash'
+// gemini-2.5-* 는 새 API 키에선 404 가 난다(기존 사용자만 허용). 앞 모델이 404 면 다음 모델로 넘어간다.
+// 모델을 바꾸려면 Secrets 에 GEMINI_MODEL 만 넣으면 된다 (코드 수정·재배포 불필요).
+const MODELS = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.5-flash', 'gemini-3.1-flash-lite'].filter(Boolean) as string[]
 const MAX = { question: 300, message: 1500, facts: 20000 }
 
 const json = (body: unknown, status = 200) => Response.json(body, { status })
@@ -23,18 +25,28 @@ function sameCode(a: string, b: string) {
 async function gemini(system: string, user: string) {
   const key = Deno.env.get('GEMINI_API_KEY')
   if (!key) throw new Error('서버에 GEMINI_API_KEY 가 설정되지 않았어요.')
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ role: 'user', parts: [{ text: user }] }],
-      generationConfig: { temperature: 0.4, responseMimeType: 'application/json', maxOutputTokens: 800 },
-    }),
+  const body = JSON.stringify({
+    systemInstruction: { parts: [{ text: system }] },
+    contents: [{ role: 'user', parts: [{ text: user }] }],
+    // 3.x 모델은 생각(thinking) 토큰도 이 한도에서 쓰므로 넉넉히 둔다
+    generationConfig: { temperature: 0.4, responseMimeType: 'application/json', maxOutputTokens: 4096 },
   })
-  if (!res.ok) throw new Error(`Gemini 오류 (${res.status})`)
-  const data = await res.json()
+  let res: Response | undefined, model = ''
+  for (model of MODELS) {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+      body,
+    })
+    if (res.status !== 404) break
+  }
+  if (!res!.ok) {
+    const detail = await res!.text().then((t) => { try { return JSON.parse(t)?.error?.message ?? t } catch { return t } })
+    throw new Error(`Gemini 오류 (${res!.status}, ${model}): ${String(detail).slice(0, 300)}`)
+  }
+  const data = await res!.json()
   const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? '').join('') ?? ''
+  if (!text) throw new Error(`Gemini 가 빈 답을 보냈어요 (${model}, ${data?.candidates?.[0]?.finishReason ?? data?.promptFeedback?.blockReason ?? '이유 없음'})`)
   return JSON.parse(text)
 }
 
