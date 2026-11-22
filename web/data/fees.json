@@ -1,0 +1,24 @@
+{
+  "_comment": "진료비 기준. tests.<검사 id>.cost 가 있으면 공시 사이트에서 직접 확인한 금액(✓ 비용 기준 확인)이고, 없으면 catalog.json 의 cost 를 추정치로 쓴다. site 는 공시 사이트의 같은 항목 이름(금액을 아직 못 가져온 것). 확인하지 않은 숫자에 cost 를 적지 말 것.",
+  "source": {
+    "name": "동물병원 진료비용 현황 조사 공개",
+    "url": "https://animalclinicfee.or.kr/info/payInfo.do",
+    "accessed": "2026-11-22"
+  },
+  "consult": {
+    "name": "초진 진찰료 (체중 5kg)",
+    "cost": 10000,
+    "verified": true,
+    "stat": "전국 값. 사이트 첫 화면의 '해당 지역별 진료비 평균'에 기본으로 표시된 값 (중간·평균·최저·최고 탭 중 어느 탭인지 화면 글자로는 표시되지 않음)"
+  },
+  "tests": {
+    "cbc": { "site": "전혈구 검사비와 판독료" },
+    "chem": { "site": "혈액화학 검사비와 판독료" },
+    "lytes": { "site": "전해질 검사비와 판독료" },
+    "xrthorax": { "site": "엑스선 촬영비와 판독료" },
+    "xrabd": { "site": "엑스선 촬영비와 판독료" },
+    "usabd": { "site": "초음파 검사비와 판독료" },
+    "echo": { "site": "초음파 검사비와 판독료" },
+    "ct": { "site": "CT 검사비와 판독료" }
+  }
+}

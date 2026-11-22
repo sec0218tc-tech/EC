@@ -31,6 +31,23 @@ export function examOf(catalog, c, id) {
   return { name: base.name, cat: base.cat, v: o.v ?? pick(base.v, c.species), ref: pick(base.ref, c.species), flag: changed, key: !!o.key };
 }
 
+// ---------- 비용 ----------
+// fees.json 을 검사 메뉴에 합친다: 공시 사이트에서 확인한 금액만 verified, 나머지는 catalog 의 추정치.
+export function applyFees(catalog, fees) {
+  for (const t of catalog.tests) {
+    const f = fees?.tests?.[t.id];
+    t.verified = f?.cost != null;
+    if (t.verified) t.cost = f.cost;
+  }
+  catalog.fees = fees || null;
+  return catalog;
+}
+export const consultFee = catalog => catalog.fees?.consult?.cost ?? 0;
+export const testsCost = (catalog, ids) => ids.reduce((a, id) => a + catalog.tests.find(t => t.id === id).cost, 0);
+export const totalCost = (catalog, s) => consultFee(catalog) + testsCost(catalog, s.ordered);
+// 보호자 예산: 케이스에 budget 이 없으면 진찰료 + 필수 검사 비용의 1.3배를 만 원 단위로 올림.
+export const budgetOf = (catalog, c) => c.budget ?? Math.ceil((consultFee(catalog) + testsCost(catalog, c.testing?.required || [])) * 1.3 / 10000) * 10000;
+
 export function testsFor(catalog, sp) {
   return catalog.tests.filter(t => !t.only || t.only === sp);
 }
@@ -67,7 +84,7 @@ export const fmtWon = n => n.toLocaleString('ko-KR') + '원';
 
 // ---------- 채점 ----------
 // 각 항목을 0~1 로 계산하고 가중치를 곱한다. 케이스에 없는 항목(설득, 처치 순서)은 빠진다.
-const W = { history: 10, problems: 10, required: 15, order: 5, unneeded: 10, persuade: 5, ddx: 15, final: 15, tx: 15, priority: 5 };
+const W = { history: 10, problems: 10, required: 15, order: 5, unneeded: 10, cost: 5, persuade: 5, ddx: 15, final: 15, tx: 15, priority: 5 };
 const clamp = x => Math.max(0, Math.min(1, x));
 
 export function score(catalog, c, s) {
@@ -112,12 +129,19 @@ export function score(catalog, c, s) {
   const ok = new Set([...T.required, ...(T.useful || [])]);
   const extra = done.filter(id => !ok.has(id));
   add('unneeded', '불필요 검사', done.length ? 1 - 0.2 * extra.length : 0,
-    extra.length ? `불필요한 검사 ${extra.length}개 (−${Math.min(100, extra.length * 20)}%): ${extra.map(name).join(', ')}` : '불필요한 검사가 없었어요.');
+    extra.length ? `불필요한 검사 ${extra.length}개 (−${Math.min(100, extra.length * 20)}%, ${fmtWon(testsCost(catalog, extra))}): ${extra.map(name).join(', ')}` : '불필요한 검사가 없었어요.');
+
+  // 보호자 예산: 넘지 않으면 만점, 넘은 비율의 2배만큼 감점 (50% 초과면 0). 검사를 안 했으면 0.
+  const budget = budgetOf(catalog, c), total = totalCost(catalog, s), over = total - budget;
+  add('cost', '비용·예산', done.length ? 1 - Math.max(0, over) / budget * 2 : 0,
+    `총 ${fmtWon(total)} / 보호자 예산 ${fmtWon(budget)}` + (over > 0 ? ` · ${fmtWon(over)} 초과` : done.length ? ' · 예산 안에서 진료했어요.' : ''));
 
   if (c.refusal) {
     const r = s.refusal || {};
-    add('persuade', '보호자 설득', r.passed ? [1, 0.6, 0.3][Math.min(r.attempts - 1, 2)] : 0,
-      r.passed ? `${r.attempts}번째 시도에 설득했어요.` : r.attempts ? '설득하지 못했어요.' : '해당 검사를 권하지 않았어요.');
+    // 비용 설명(금액·결과로 달라지는 것·대안)이 빠지면 20% 감점. costOk 가 없으면(옛 서버) 감점하지 않는다.
+    const noCost = r.passed && r.costOk === false;
+    add('persuade', '보호자 설득', (r.passed ? [1, 0.6, 0.3][Math.min(r.attempts - 1, 2)] : 0) * (noCost ? 0.8 : 1),
+      (r.passed ? `${r.attempts}번째 시도에 설득했어요.` : r.attempts ? '설득하지 못했어요.' : '해당 검사를 권하지 않았어요.') + (noCost ? ' 비용(금액과 그 값어치) 설명이 빠졌어요 (−20%).' : ''));
   }
 
   // 감별진단: 1차 목록 기준

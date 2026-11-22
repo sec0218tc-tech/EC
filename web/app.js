@@ -60,10 +60,13 @@ function save() { if (C) store.set('ec2-state-' + C.id, S); }
 
 // ---------- 시작 ----------
 async function boot() {
-  [catalog, index] = await Promise.all([
+  let fees;
+  [catalog, index, fees] = await Promise.all([
     fetch('data/catalog.json').then(r => r.json()),
     fetch('data/cases/index.json').then(r => r.json()),
+    fetch('data/fees.json').then(r => r.json()).catch(() => null), // 없으면 모든 비용이 추정치
   ]);
+  E.applyFees(catalog, fees);
   window.addEventListener('hashchange', route);
   route();
 }
@@ -168,6 +171,7 @@ function renderIntake() {
     h('dl', { class: 'sig' }, h('dt', null, '종'), h('dd', null, spName(C.species)),
       Object.entries(C.signalment).map(([k, v]) => [h('dt', null, k), h('dd', null, v)])),
     h('div', { class: 'bubble a' }, C.cc),
+    h('p', { class: 'small' }, h('b', null, '보호자 예산 '), E.fmtWon(budget()), ' · 초진 진찰료 ', E.fmtWon(E.consultFee(catalog)), ' ', consultBadge()),
     C.emergency && h('p', { class: 'note warn' }, '응급 내원. 처치 단계에서 초기 처치 순서도 평가합니다.'),
     next('문진 시작'),
   ];
@@ -270,7 +274,24 @@ function renderDdx1() {
 }
 
 // ---------- 5. 추가검사 ----------
-function totalCost() { return S.ordered.reduce((a, id) => a + catalog.tests.find(t => t.id === id).cost, 0); }
+const totalCost = () => E.totalCost(catalog, S);
+const budget = () => E.budgetOf(catalog, C);
+const F = () => catalog.fees;
+// '비용 기준 확인'은 공시 사이트에서 직접 본 숫자에만 붙인다. 나머지는 추정치.
+const feeBadge = ok => h('span', { class: 'tag tiny ' + (ok ? 'ok' : 'muted') }, ok ? '✓ 비용 기준 확인' : '추정치');
+const consultBadge = () => feeBadge(!!F()?.consult?.verified);
+function costBar() {
+  const total = totalCost(), b = budget(), over = total > b;
+  return h('div', { class: 'cost' + (over ? ' over' : '') },
+    h('div', { class: 'row between' }, h('span', null, `누적 ${E.fmtWon(total)} / 예산 ${E.fmtWon(b)}`), h('span', { class: 'small' }, over ? `${E.fmtWon(total - b)} 초과` : `남은 ${E.fmtWon(b - total)}`)),
+    h('div', { class: 'bar' }, h('i', { style: `width:${Math.min(100, total / b * 100)}%` })));
+}
+function feeSource() {
+  const f = F();
+  return h('p', { class: 'muted small' }, f
+    ? [`진찰료 ${E.fmtWon(E.consultFee(catalog))} 포함. `, consultBadge(), ` 표시는 `, h('a', { href: f.source.url, target: '_blank', rel: 'noopener' }, f.source.name), ` (${f.source.accessed} 확인)에서 직접 본 금액에만 붙였고, 나머지는 추정치예요.`]
+    : '비용 기준 파일을 불러오지 못해 모든 금액이 추정치예요.');
+}
 
 function orderTest(id) {
   if (S.ordered.includes(id)) return;
@@ -292,17 +313,20 @@ function resultCard(id, open) {
 
 function renderPersuade() {
   const R = C.refusal, st = S.refusal;
-  const tname = catalog.tests.find(t => t.id === R.test).name;
+  const test = catalog.tests.find(t => t.id === R.test), tname = test.name;
+  const costInfo = `${tname} ${E.fmtWon(test.cost)} (${test.verified ? '비용 기준 확인' : '추정치'}) · 지금까지 ${E.fmtWon(totalCost())} · 보호자 예산 ${E.fmtWon(budget())}`;
   const log = st.log.flatMap(l => [h('div', { class: 'bubble q' }, l.msg), h('div', { class: 'bubble a' }, l.reply), l.feedback && h('p', { class: 'muted small' }, '피드백: ' + l.feedback)]);
   return h('div', { class: 'card persuade' },
     h('h3', null, `보호자가 ${tname}을(를) 망설여요`),
     h('div', { class: 'bubble a' }, R.owner),
+    h('p', { class: 'muted small' }, costInfo, '. 금액, 결과로 무엇이 달라지는지, 더 싼 대안이 있는지 설명하면 설득에 유리해요.'),
     log,
     st.offline ? [
       h('p', { class: 'muted small' }, 'AI 판정을 쓸 수 없습니다. 모범 답안과 비교해 직접 판정하세요.'),
       h('div', { class: 'note' }, h('b', null, '모범 설득 예시: '), R.model),
       h('div', { class: 'row' },
-        h('button', { class: 'btn primary', onclick: () => { st.attempts++; st.passed = true; st.open = false; orderTest(R.test); } }, '내 설득이 이만큼 됐어요'),
+        h('label', { class: 'small' }, h('input', { type: 'checkbox', id: 'costok' }), ' 금액과 그 값어치를 구체적으로 설명했어요'),
+        h('button', { class: 'btn primary', onclick: () => { st.attempts++; st.passed = true; st.costOk = !!document.getElementById('costok')?.checked; st.open = false; orderTest(R.test); } }, '내 설득이 이만큼 됐어요'),
         h('button', { class: 'btn ghost', onclick: () => { st.attempts++; st.open = false; render(); } }, '부족했어요')),
     ] : h('form', { onsubmit: async e => {
       e.preventDefault();
@@ -310,10 +334,10 @@ function renderPersuade() {
       if (!msg || busy) return;
       busy = true; e.target.querySelector('button').textContent = '보호자가 생각 중…';
       try {
-        const r = await judgePersuasion({ test: tname, ownerConcern: R.owner, keyPoints: R.points, persona: C.owner || '' }, msg, st.log);
+        const r = await judgePersuasion({ test: tname, ownerConcern: R.owner, keyPoints: R.points, persona: C.owner || '', cost: costInfo }, msg, st.log);
         st.attempts++;
         st.log.push({ msg, reply: r.reply, feedback: r.feedback });
-        if (r.pass) { st.passed = true; st.open = false; busy = false; return orderTest(R.test); }
+        if (r.pass) { st.passed = true; if (typeof r.costOk === 'boolean') st.costOk = r.costOk; st.open = false; busy = false; return orderTest(R.test); }
       } catch (err) {
         st.offline = true; alertNote(err.message);
       }
@@ -330,8 +354,9 @@ function renderTests() {
   const recent = [...S.ordered].reverse();
   return [
     h('h2', null, '추가검사'),
-    h('p', { class: 'muted small' }, '필요한 검사를 순서대로 오더하세요. 기본 검사에서 확진 검사로 가는 순서와 불필요한 검사도 평가합니다.'),
-    h('div', { class: 'cost' }, `누적 비용 ${E.fmtWon(totalCost())} · ${S.ordered.length}개 시행`),
+    h('p', { class: 'muted small' }, '필요한 검사를 순서대로 오더하세요. 기본 검사에서 확진 검사로 가는 순서, 불필요한 검사, 보호자 예산 초과도 평가합니다.'),
+    costBar(),
+    feeSource(),
     S.refusal.open && C.refusal && renderPersuade(),
     recent.length > 0 && h('div', { class: 'results' }, h('h3', null, '검사 결과'), recent.map(id => resultCard(id, id === S.lastTest))),
     h('h3', null, '검사 메뉴'),
@@ -340,7 +365,7 @@ function renderTests() {
       h('div', { class: 'tests' }, ts.map(t => h('button', {
         class: 'test' + (S.ordered.includes(t.id) ? ' done' : ''), disabled: S.ordered.includes(t.id) || locked(6), // 확정진단 전까지는 돌아와서 더 오더할 수 있다
         onclick: () => orderTest(t.id),
-      }, h('span', null, (S.ordered.includes(t.id) ? '✓ ' : '') + t.name), h('small', { class: 'muted' }, `${E.fmtWon(t.cost)} · ${E.fmtMin(t.min)}`)))),
+      }, h('span', null, (S.ordered.includes(t.id) ? '✓ ' : '') + t.name), h('small', { class: 'muted' }, `${E.fmtWon(t.cost)} · ${E.fmtMin(t.min)} `, feeBadge(t.verified))))),
     ]),
     next('진단 내리기'),
   ];
@@ -446,7 +471,7 @@ function renderResult() {
     T.useful?.length > 0 && h('p', null, h('b', null, '해도 좋은 검사: '), T.useful.map(tname).join(', ')),
     Object.keys(T.after || {}).length > 0 && h('p', null, h('b', null, '순서: '), Object.entries(T.after).map(([id, pre]) => `${pre.map(tname).join(', ')} → ${tname(id)}`).join(' / ')),
     T.why && h('p', { class: 'muted' }, T.why),
-    h('p', { class: 'muted small' }, `내 검사 순서: ${S.ordered.map(tname).join(' → ') || '없음'} (총 ${E.fmtWon(totalCost())})`),
+    h('p', { class: 'muted small' }, `내 검사 순서: ${S.ordered.map(tname).join(' → ') || '없음'} (진찰료 포함 총 ${E.fmtWon(totalCost())} / 예산 ${E.fmtWon(budget())})`),
     C.refusal && [h('h3', null, '보호자 설득 모범 예시'), h('p', null, C.refusal.model)],
     h('h3', null, '처치'),
     C.tx.map((g, gi) => [h('h4', null, g.group), g.options.map((o, oi) => h('div', { class: 'ex ' + (o.ok ? 'final' : 'no') },
@@ -475,13 +500,14 @@ function recordBody(all = true) {
     const r = E.testResult(catalog, C, id);
     const rows = (r.rows || []).filter(x => x.flag).map(x => h('span', { class: 'hit' }, `${x.n} ${x.v}${x.u ? ' ' + x.u : ''}`, flagTag(x.flag)));
     if (r.textFlag) rows.push(h('span', { class: 'hit' }, r.text, flagTag('A')));
-    return [h('li', { class: rows.length ? 'abn' : null }, h('b', null, r.name + ': '), rows.length ? rows.flatMap((x, i) => i ? [', ', x] : [x]) : '이상 없음')];
+    return [h('li', { class: rows.length ? 'abn' : null }, h('b', null, r.name + ': '), h('span', { class: 'muted' }, E.fmtWon(r.cost) + ' '), rows.length ? rows.flatMap((x, i) => i ? [', ', x] : [x]) : '이상 없음')];
   });
   const sec = (title, list, empty = '아직 없음') => [h('h4', null, title), list.length ? h('ul', null, list) : h('p', { class: 'muted small' }, empty)];
   const ddx = (S.ddx2 || S.ddx1).map(i => h('li', null, C.dx[i].t));
   return [
     h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
     h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
+    h('p', { class: 'small' + (totalCost() > budget() ? ' over' : '') }, h('b', null, '비용 '), `${E.fmtWon(totalCost())} / 예산 ${E.fmtWon(budget())}`),
     sec('문진', [...S.asked.map(id => { const a = E.answerOf(catalog, C, id); return li('q' + id, { class: a.flag ? 'abn' : null }, [a.chart, a.flag && flagTag('A')]); }), ...S.free.map((f, i) => li('f' + i, null, `${f.q} → ${f.a}`))]),
     sec('신체검사', exams.map(e => li('x' + e.id, { class: e.flag ? 'abn' : null }, [`${e.name}: ${e.v}`, e.flag && flagTag(examFlag(e))]))),
     sec('문제 목록', S.problems.map(i => li('p' + i, null, C.problems[i].t))),

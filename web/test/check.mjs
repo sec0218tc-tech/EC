@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import * as E from '../engine.js';
 
 const dir = new URL('../data/', import.meta.url);
-const catalog = JSON.parse(readFileSync(new URL('catalog.json', dir)));
+const catalog = E.applyFees(JSON.parse(readFileSync(new URL('catalog.json', dir))), JSON.parse(readFileSync(new URL('fees.json', dir))));
 const files = readdirSync(new URL('cases/', dir)).filter(f => f.endsWith('.json') && f !== 'index.json').sort();
 // --index: 케이스 파일들로 cases/index.json 을 다시 만든다.
 if (process.argv.includes('--index')) {
@@ -28,6 +28,21 @@ const index = JSON.parse(readFileSync(new URL('cases/index.json', dir)));
   assert.equal(order(['echo']), 0);
   assert.equal(order(['xrthorax']), undefined);
   assert.equal(order([]), undefined); }
+
+// 비용: 확인한 금액만 verified, 예산 초과면 감점, 비용 설명이 빠진 설득은 20% 감점
+{ const fees = JSON.parse(readFileSync(new URL('fees.json', dir)));
+  assert.ok(fees.source.url && fees.source.accessed);
+  for (const t of catalog.tests) assert.equal(t.verified, fees.tests[t.id]?.cost != null, t.id);
+  const c = JSON.parse(readFileSync(new URL('cases/pancreatitis-schnauzer.json', dir)));
+  const budget = E.budgetOf(catalog, c);
+  const cost = ordered => E.score(catalog, c, { ...E.newState(), ordered }).items.find(x => x.key === 'cost').frac;
+  assert.equal(cost(c.testing.required), 1);
+  assert.equal(cost([]), 0);
+  assert.ok(cost([...c.testing.required, 'ct', 'endoscopy']) < 1 && E.totalCost(catalog, { ordered: [...c.testing.required, 'ct'] }) > budget);
+  const persuade = refusal => E.score(catalog, c, { ...E.newState(), refusal }).items.find(x => x.key === 'persuade').frac;
+  assert.equal(persuade({ attempts: 1, passed: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: false }), 0.8); }
 
 // flagOf 기본 동작
 assert.equal(E.flagOf('42.6', '5.05–16.76'), 'H');

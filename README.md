@@ -13,6 +13,7 @@ node web/test/check.mjs                   # 케이스 데이터 검사 + 채점 
 
 ### 파일
 - `web/data/catalog.json` — 모든 케이스가 공유하는 질문·신체검사·검사 메뉴(비용, 소요 시간, 개/고양이 정상값과 참고범위)
+- `web/data/fees.json` — 진료비 기준. 출처([동물병원 진료비용 현황 조사 공개](https://animalclinicfee.or.kr/info/payInfo.do))와 확인 날짜, 사이트에서 **직접 확인한 금액만** 적습니다(앱에 "✓ 비용 기준 확인"으로 표시). 적지 않은 검사는 `catalog.json` 의 cost 를 "추정치"로 씁니다. 보호자 예산은 케이스의 `budget`, 없으면 진찰료+필수 검사 비용의 1.3배(만 원 단위 올림)이고, 넘으면 '비용·예산' 점수가 깎입니다.
 - `web/data/cases/<id>.json` — 케이스. 공통 메뉴와 **다른 것만** 적습니다. 적지 않은 검사는 정상 결과가 나오고, 수치는 참고범위로 H/L 이 자동 표시됩니다.
 - `web/engine.js` — 데이터 해석과 채점, `web/app.js` — 화면, `web/ai.js`·`web/config.js` — AI 서버 호출
 
