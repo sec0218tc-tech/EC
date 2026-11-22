@@ -207,3 +207,41 @@ li.abn::marker { content: "■  "; font-size: .7em; }
 .coach .art .r { stroke: var(--warm-ink); }
 .coach-head { font-size: 1.15rem; font-weight: 700; line-height: 1.4; }
 .coach b { font-weight: 700; margin-right: 4px; }
+
+/* 문진·신체검사·문제 목록: 누르면 바로 적히는 진료 기록 차트.
+   폰은 단계 바 아래에 붙는 접이식 차트(높이 제한, 안에서만 스크롤), 넓은 화면은 왼쪽 열. */
+.split { display: grid; gap: 0 32px; }
+.chart { position: sticky; top: 50px; z-index: 3; background: var(--bg); margin: 0 -16px; padding: 0 16px; border-bottom: 2px solid var(--rule); }
+.chart-head { font: inherit; font-weight: 700; width: 100%; min-height: 44px; border: 0; background: none; color: var(--text); padding: 8px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.chart-head .fold { color: var(--accent); font-weight: 700; }
+.chart-body { position: relative; max-height: 34vh; max-height: 34dvh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 10px; border-top: 1px solid var(--line); }
+.chart.closed .chart-body { display: none; }
+.chart-body > p { margin: 8px 0 0; }
+.chart-body h4 { border-top: 1px solid var(--rule); padding-top: 6px; margin: 12px 0 4px; color: var(--text); }
+.chart-body ul { margin: 0; padding-left: 18px; font-size: .88rem; }
+.chart-body li.new { background: var(--tint); box-shadow: -18px 0 0 var(--tint), 4px 0 0 var(--tint); }
+.chart-body li.new::marker { color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .chart-body li.new { animation: ink .9s ease-out; }
+  @keyframes ink { from { background: color-mix(in srgb, var(--accent) 22%, var(--bg)); } }
+}
+button.exam.done span { color: var(--muted); font-weight: 400; }
+button.exam:disabled { cursor: default; background: none; }
+
+@media (min-width: 900px) {
+  main.wide { max-width: 1120px; }
+  .split { grid-template-columns: minmax(300px, 380px) 1fr; align-items: start; }
+  .chart { margin: 20px 0 0; padding: 0 0 0 0; border: 0; border-top: 2px solid var(--rule); }
+  .chart-head { cursor: default; pointer-events: none; }
+  .chart-head .fold { display: none; }
+  .chart.closed .chart-body { display: block; }
+  .chart-body { max-height: calc(100vh - 50px - 40px); border-top: 1px solid var(--line); }
+}
+
+/* 감별 정리 뒤 확인 창: 시트처럼 아래에서 올라오는 직각 상자 */
+.ask { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; max-width: 720px; margin: 0 auto; background: var(--bg); border-top: 2px solid var(--rule); padding: 4px 16px calc(16px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px rgba(0,0,0,.18); }
+.ask h3 { border: 0; margin: 12px 0 4px; font-size: 1.15rem; }
+.ask p { margin: 0 0 14px; }
+.ask .row .btn { flex: 1; }
+.ask-root .backdrop { z-index: 24; }
+@media (min-width: 900px) { .ask { bottom: auto; top: 30vh; max-width: 480px; border: 2px solid var(--rule); } }

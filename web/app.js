@@ -14,6 +14,10 @@ let S = null; // 진행 상태
 let view = 0; // 보고 있는 단계 (S.step 은 도달한 단계)
 let busy = false;
 let sheetOpen = false;
+let askMore = false; // 감별 수정 뒤 '추가 검사 더 할까요?' 창
+let chartOpen = true; // 폰에서 문진·신체검사·문제 목록 위의 차트 펼침 여부
+let fresh = null; // 방금 차트에 기록된 항목. 차트 안에서만 그 줄로 스크롤한다
+const CHART_STEPS = [1, 2, 3]; // 누르면 바로 왼쪽 차트에 기록되는 단계
 
 // ---------- 유틸 ----------
 function h(tag, attrs, ...kids) {
@@ -65,7 +69,7 @@ async function boot() {
 
 async function route() {
   const id = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
-  sheetOpen = false;
+  sheetOpen = false; askMore = false;
   if (!id || !index.some(c => c.id === id)) { C = null; return renderHome(); }
   if (!C || C.id !== id) {
     C = await fetch(`data/cases/${id}.json`).then(r => r.json());
@@ -78,6 +82,7 @@ async function route() {
 // ---------- 홈 ----------
 function renderHome() {
   sheetRoot.replaceChildren();
+  app.classList.remove('wide');
   const results = store.get(RESULTS_KEY, {});
   const byLevel = groupBy(index, c => c.difficulty);
   app.replaceChildren(...[
@@ -115,15 +120,19 @@ function render() {
     onclick: () => { view = i; render(); },
   }, h('span', { class: 'n' }, String(i + 1).padStart(2, '0')), name)));
   const body = [renderIntake, renderHistory, renderExam, renderProblems, renderDdx1, renderTests, renderFinal, renderTx, renderResult][view]();
+  const charting = CHART_STEPS.includes(view);
+  const chart = charting && renderChart();
+  app.classList.toggle('wide', charting);
   app.replaceChildren(
     h('div', { class: 'case-head' },
       h('a', { href: '#', class: 'back' }, '← 목록'),
       h('b', null, C.title),
       h('span', { class: 'folio' }, `${String(view + 1).padStart(2, '0')}/${String(STEPS.length).padStart(2, '0')}`)),
     stepper,
-    h('section', { class: 'panel' }, body),
+    charting ? h('div', { class: 'split' }, chart, h('section', { class: 'panel' }, body)) : h('section', { class: 'panel' }, body),
   );
-  renderSheet();
+  if (charting) { sheetRoot.replaceChildren(); scrollChart(chart); } else renderSheet();
+  fresh = null;
   const on = stepper.querySelector('.on'); // 페이지는 그대로 두고 단계 바만 가로로 맞춘다
   if (on) stepper.scrollLeft = on.offsetLeft - (stepper.clientWidth - on.offsetWidth) / 2;
   save();
@@ -160,12 +169,6 @@ function renderIntake() {
 
 // ---------- 1. 문진 ----------
 function renderHistory() {
-  const log = [];
-  for (const id of S.asked) {
-    const a = E.answerOf(catalog, C, id);
-    log.push(h('div', { class: 'bubble q' }, a.q), h('div', { class: 'bubble a' }, a.a));
-  }
-  for (const f of S.free) log.push(h('div', { class: 'bubble q' }, f.q, h('span', { class: 'tag tiny' }, '자유')), h('div', { class: 'bubble a' }, f.a));
   const form = h('form', { class: 'row free', onsubmit: async e => {
     e.preventDefault();
     const input = e.target.q; const q = input.value.trim();
@@ -174,6 +177,7 @@ function renderHistory() {
     try {
       const r = await askOwner(ownerFacts(), q, S.free.slice(-6));
       S.free.push({ q, a: r.answer });
+      fresh = 'f' + (S.free.length - 1);
     } catch (err) { alertNote(err.message); }
     busy = false; render();
     document.querySelector('.free input')?.focus();
@@ -183,14 +187,13 @@ function renderHistory() {
 
   return [
     h('h2', null, '문진'),
-    h('p', { class: 'muted small' }, '보호자에게 물을 질문을 고르세요. 핵심 질문을 빠뜨리면 감점됩니다.'),
-    h('div', { class: 'chat' }, log.length ? log : h('p', { class: 'muted small' }, '기록된 문진이 없습니다.')),
+    h('p', { class: 'muted small' }, '보호자에게 물을 질문을 고르세요. 답은 진료 기록에 바로 적힙니다. 핵심 질문을 빠뜨리면 감점됩니다.'),
     form,
     [...groupBy(catalog.questions, q => q.cat)].map(([cat, qs]) => [
       h('h3', null, cat),
       h('div', { class: 'chips' }, qs.map(q => h('button', {
         class: 'chip', disabled: S.asked.includes(q.id),
-        onclick: () => { S.asked.push(q.id); render(); },
+        onclick: () => { S.asked.push(q.id); fresh = 'q' + q.id; render(); },
       }, q.q))),
     ]),
     next('신체검사로'),
@@ -212,18 +215,16 @@ function renderExam() {
   const items = catalog.exam;
   return [
     h('h2', null, '신체검사'),
-    h('p', { class: 'muted small' }, '시행할 항목을 누르세요. 소견은 진료 기록에 남습니다.'),
+    h('p', { class: 'muted small' }, '시행할 항목을 누르세요. 소견은 진료 기록에 바로 적힙니다.'),
     [...groupBy(items, e => e.cat)].map(([cat, es]) => [
       h('h3', null, cat),
       h('div', { class: 'exam-list' }, es.map(e => {
         const done = S.examined.includes(e.id);
-        const r = E.examOf(catalog, C, e.id);
-        return done
-          ? h('div', { class: 'exam done' + (r.flag ? ' abn' : '') }, h('b', null, e.name), h('span', null, r.v), h('small', { class: 'muted' }, `참고 ${r.ref}`))
-          : h('button', { class: 'exam', onclick: () => { S.examined.push(e.id); render(); } }, e.name, h('span', { class: 'muted small' }, '검사하기'));
+        return h('button', { class: 'exam' + (done ? ' done' : ''), disabled: done, onclick: () => { S.examined.push(e.id); fresh = 'x' + e.id; render(); } },
+          e.name, h('span', { class: 'small' }, done ? '✓ 기록됨' : '검사하기'));
       })),
     ]),
-    S.examined.length < items.length && h('button', { class: 'btn ghost wide', onclick: () => { S.examined = items.map(e => e.id); render(); } }, '나머지 항목 모두 검사'),
+    S.examined.length < items.length && h('button', { class: 'btn ghost wide', onclick: () => { S.examined = [...S.examined, ...items.map(e => e.id).filter(id => !S.examined.includes(id))]; render(); } }, '나머지 항목 모두 검사'),
     next('문제 목록 정리'),
   ];
 }
@@ -238,7 +239,7 @@ function renderProblems() {
     lock && h('p', { class: 'note' }, '다음 단계로 넘어가 수정할 수 없습니다.'),
     h('div', { class: 'chips' }, shuffled(probs.length, C.id + 'p').map(i => h('button', {
       class: 'chip' + (S.problems.includes(i) ? ' sel' : ''), disabled: lock,
-      onclick: () => { S.problems = toggle(S.problems, i); render(); },
+      onclick: () => { S.problems = toggle(S.problems, i); fresh = 'p' + i; render(); },
     }, probs[i].t))),
     next('감별진단으로'),
   ];
@@ -331,7 +332,7 @@ function renderTests() {
     [...groupBy(tests, t => t.cat)].map(([cat, ts]) => [
       h('h4', null, cat),
       h('div', { class: 'tests' }, ts.map(t => h('button', {
-        class: 'test' + (S.ordered.includes(t.id) ? ' done' : ''), disabled: S.ordered.includes(t.id) || locked(5),
+        class: 'test' + (S.ordered.includes(t.id) ? ' done' : ''), disabled: S.ordered.includes(t.id) || locked(6), // 확정진단 전까지는 돌아와서 더 오더할 수 있다
         onclick: () => orderTest(t.id),
       }, h('span', null, (S.ordered.includes(t.id) ? '✓ ' : '') + t.name), h('small', { class: 'muted' }, `${E.fmtWon(t.cost)} · ${E.fmtMin(t.min)}`)))),
     ]),
@@ -343,10 +344,20 @@ function renderTests() {
 function renderFinal() {
   if (!S.ddx2) S.ddx2 = [...S.ddx1];
   const lock = locked(6);
-  return [
+  const ddxHead = [
     h('h2', null, '감별진단 수정'),
     h('p', { class: 'muted small' }, '검사 결과를 보고 남길 감별진단만 고르세요.'),
     dxChips(S.ddx2, i => { S.ddx2 = toggle(S.ddx2, i); render(); }, lock),
+  ];
+  // 감별을 정리하면 먼저 추가 검사가 더 필요한지 묻고, 아니라고 해야 확정진단으로 간다
+  if (!lock && !S.ddxDone) return [
+    ...ddxHead,
+    h('div', { class: 'nav' },
+      h('button', { class: 'btn ghost', onclick: () => { view--; render(); scrollTo(0, 0); } }, '← 이전'),
+      h('button', { class: 'btn primary', onclick: () => { askMore = true; render(); } }, '감별 정리 완료 →')),
+  ];
+  return [
+    ...ddxHead,
     h('h2', null, '확정진단'),
     h('p', { class: 'muted small' }, '최종 진단을 고르세요. 동반 질환이 있으면 여러 개를 고릅니다.'),
     lock && h('p', { class: 'note' }, '확정진단은 고정됐습니다.'),
@@ -447,30 +458,66 @@ function renderResult() {
   ];
 }
 
-// ---------- 진료 기록 바텀시트 ----------
-function renderSheet() {
+// ---------- 진료 기록: 문진·신체검사·문제 목록에선 왼쪽 차트, 나머지 단계에선 바텀시트 ----------
+function recordCount() { return S.asked.length + S.free.length + S.examined.length + S.ordered.length; }
+
+// all=false 면 아직 비어 있는 감별·검사 칸은 숨긴다 (차트 단계에선 오지 않은 단계라서)
+function recordBody(all = true) {
   const exams = S.examined.map(id => ({ id, ...E.examOf(catalog, C, id) }));
+  const li = (key, attrs, text) => h('li', { ...attrs, class: [attrs?.class, fresh === key && 'new'].filter(Boolean).join(' ') || null }, text);
   const abnRows = S.ordered.flatMap(id => {
     const r = E.testResult(catalog, C, id);
     const rows = (r.rows || []).filter(x => x.flag).map(x => `${x.n} ${x.v}${x.u ? ' ' + x.u : ''}${x.flag !== 'A' ? ' ' + x.flag : ''}`);
     if (r.textFlag) rows.push(r.text);
     return [h('li', null, h('b', null, r.name + ': '), rows.length ? rows.join(', ') : '이상 없음')];
   });
-  const count = S.asked.length + S.free.length + S.examined.length + S.ordered.length;
   const sec = (title, list, empty = '아직 없음') => [h('h4', null, title), list.length ? h('ul', null, list) : h('p', { class: 'muted small' }, empty)];
+  const ddx = (S.ddx2 || S.ddx1).map(i => h('li', null, C.dx[i].t));
+  return [
+    h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
+    h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
+    sec('문진', [...S.asked.map(id => li('q' + id, null, E.answerOf(catalog, C, id).chart)), ...S.free.map((f, i) => li('f' + i, null, `${f.q} → ${f.a}`))]),
+    sec('신체검사', exams.map(e => li('x' + e.id, { class: e.flag ? 'abn' : null }, `${e.name}: ${e.v}`))),
+    sec('문제 목록', S.problems.map(i => li('p' + i, null, C.problems[i].t))),
+    (all || ddx.length > 0) && sec('감별진단', ddx),
+    (all || abnRows.length > 0) && sec(`추가검사 (${E.fmtWon(totalCost())})`, abnRows),
+  ];
+}
+
+function renderChart() {
+  return h('aside', { class: 'chart' + (chartOpen ? '' : ' closed'), 'aria-label': '진료 기록' },
+    h('button', { class: 'chart-head', 'aria-expanded': String(chartOpen), onclick: () => { chartOpen = !chartOpen; render(); } },
+      h('span', { class: 'handle-title' }, icon('chart'), `진료 기록 (${recordCount()})`), h('span', { class: 'fold small' }, chartOpen ? '접기' : '펼치기')),
+    h('div', { class: 'chart-body' }, recordBody(false)));
+}
+
+// 페이지는 움직이지 않고 차트 상자만 새 줄이 보이게 스크롤한다
+function scrollChart(chart) {
+  const box = chart.querySelector('.chart-body'), n = box.querySelector('.new');
+  if (n) box.scrollTop = n.offsetTop - box.clientHeight / 2 + n.offsetHeight / 2;
+}
+
+function renderSheet() {
   const sheet = h('div', { class: 'sheet' + (sheetOpen ? ' open' : '') },
     h('button', { class: 'handle', onclick: () => { sheetOpen = !sheetOpen; renderSheet(); } },
-      h('i'), h('span', { class: 'handle-title' }, icon('chart'), `진료 기록 (${count})`), h('span', { class: 'muted small' }, sheetOpen ? '닫기' : '열기')),
-    sheetOpen && h('div', { class: 'sheet-body' },
-      h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
-      h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
-      sec('문진', [...S.asked.map(id => h('li', null, E.answerOf(catalog, C, id).chart)), ...S.free.map(f => h('li', null, `${f.q} → ${f.a}`))]),
-      sec('신체검사', exams.map(e => h('li', { class: e.flag ? 'abn' : '' }, `${e.name}: ${e.v}`))),
-      sec('문제 목록', S.problems.map(i => h('li', null, C.problems[i].t))),
-      sec('감별진단', (S.ddx2 || S.ddx1).map(i => h('li', null, C.dx[i].t))),
-      sec(`추가검사 (${E.fmtWon(totalCost())})`, abnRows)));
+      h('i'), h('span', { class: 'handle-title' }, icon('chart'), `진료 기록 (${recordCount()})`), h('span', { class: 'muted small' }, sheetOpen ? '닫기' : '열기')),
+    sheetOpen && h('div', { class: 'sheet-body' }, recordBody()));
   const backdrop = sheetOpen && h('div', { class: 'backdrop', onclick: () => { sheetOpen = false; renderSheet(); } });
-  sheetRoot.replaceChildren(...[backdrop, sheet].filter(Boolean));
+  sheetRoot.replaceChildren(...[backdrop, sheet, askMore && renderAskMore()].filter(Boolean));
+  sheetRoot.querySelector('.ask .primary')?.focus();
+}
+
+function renderAskMore() {
+  const left = (S.ddx2 || []).length;
+  const close = () => { askMore = false; render(); };
+  return h('div', { class: 'ask-root', onkeydown: e => e.key === 'Escape' && close() },
+    h('div', { class: 'backdrop', onclick: close }),
+    h('div', { class: 'ask', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'ask-t' },
+      h('h3', { id: 'ask-t' }, '추가 검사가 더 필요한가요?'),
+      h('p', { class: 'small' }, `남은 감별진단 ${left}개. 지금까지 ${S.ordered.length}개 검사를 했어요 (${E.fmtWon(totalCost())}). 감별을 가르거나 확진할 검사가 남았다면 더 오더하세요.`),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn ghost', onclick: () => { askMore = false; view = 5; render(); scrollTo(0, 0); } }, '검사 더 하기'),
+        h('button', { class: 'btn primary', onclick: () => { askMore = false; S.ddxDone = true; render(); } }, '아니요, 확정진단으로'))));
 }
 
 function alertNote(msg) {
