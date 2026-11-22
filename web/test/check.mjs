@@ -5,7 +5,8 @@ import * as E from '../engine.js';
 import * as N from '../notebook.js';
 
 const dir = new URL('../data/', import.meta.url);
-const catalog = JSON.parse(readFileSync(new URL('catalog.json', dir)));
+const fees = JSON.parse(readFileSync(new URL('fees.json', dir)));
+const catalog = E.applyFees(JSON.parse(readFileSync(new URL('catalog.json', dir))), fees);
 const files = readdirSync(new URL('cases/', dir)).filter(f => f.endsWith('.json') && f !== 'index.json').sort();
 // --index: 케이스 파일들로 cases/index.json 을 다시 만든다.
 if (process.argv.includes('--index')) {
@@ -29,6 +30,24 @@ const index = JSON.parse(readFileSync(new URL('cases/index.json', dir)));
   assert.equal(order(['echo']), 0);
   assert.equal(order(['xrthorax']), undefined);
   assert.equal(order([]), undefined); }
+
+// 비용: 확인한 금액만 verified, 예산 초과면 감점, 비용 설명이 빠진 설득은 20% 감점
+{ assert.ok(fees.source.url && fees.source.accessed);
+  for (const t of catalog.tests) assert.equal(t.verified, fees.tests[t.id]?.cost != null, t.id);
+  const c = JSON.parse(readFileSync(new URL('cases/pancreatitis-schnauzer.json', dir)));
+  const price = (kg, id) => (E.applyFees(catalog, fees, kg), catalog.tests.find(t => t.id === id).cost);
+  assert.equal(price(3.4, 'usabd'), 50000); assert.equal(price(12, 'usabd'), 55000); assert.equal(price(38, 'usabd'), 66000);
+  assert.equal(price(null, 'usabd'), 57000); assert.equal(price(38, 'cbc'), 34000); assert.equal(price(38, 'sdma'), 35000);
+  E.applyFees(catalog, fees, E.weightOf(c));
+  const budget = E.budgetOf(catalog, c);
+  const cost = ordered => E.score(catalog, c, { ...E.newState(), ordered }).items.find(x => x.key === 'cost').frac;
+  assert.equal(cost(c.testing.required), 1);
+  assert.equal(cost([]), 0);
+  assert.ok(cost([...c.testing.required, 'ct', 'endoscopy']) < 1 && E.totalCost(catalog, { ordered: [...c.testing.required, 'ct'] }) > budget);
+  const persuade = refusal => E.score(catalog, c, { ...E.newState(), refusal }).items.find(x => x.key === 'persuade').frac;
+  assert.equal(persuade({ attempts: 1, passed: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: false }), 0.8); }
 
 // flagOf 기본 동작
 assert.equal(E.flagOf('42.6', '5.05–16.76'), 'H');
@@ -74,6 +93,7 @@ for (const f of files) {
   if (c.emergency && !c.priority) fail(id, '응급 케이스인데 priority 없음');
   if (!c.problems?.some(p => p.key)) fail(id, 'key 문제 없음');
 
+  E.applyFees(catalog, fees, E.weightOf(c));
   // 모범 풀이는 100점이어야 함
   const s = E.newState();
   s.asked = Object.entries(c.history).filter(([, o]) => o.key).map(([q]) => q);

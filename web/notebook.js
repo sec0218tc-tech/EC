@@ -16,7 +16,7 @@ export const systemOf = id => SYSTEM[id] || '기타';
 // 진료 순서대로. 신체검사는 점수에 들어가지 않지만 오답 노트에는 남긴다.
 export const STAGES = [
   ['history', '문진'], ['exam', '신체검사'], ['problems', '문제 목록'], ['ddx', '감별진단'],
-  ['required', '필수 검사'], ['order', '검사 순서'], ['unneeded', '불필요 검사'], ['persuade', '보호자 설득'],
+  ['required', '필수 검사'], ['order', '검사 순서'], ['unneeded', '불필요 검사'], ['cost', '비용·예산'], ['persuade', '보호자 설득'],
   ['final', '확정진단'], ['tx', '처치'], ['priority', '응급 처치 순서'],
 ];
 const LABEL = Object.fromEntries(STAGES);
@@ -55,7 +55,7 @@ export function attemptFrom(catalog, c, s, r = E.score(catalog, c, s)) {
   const items = r.items.map(x => ({ key: x.key, frac: x.frac }));
   if (keyX.length) items.splice(1, 0, { key: 'exam', frac: 1 - missedX.length / keyX.length });
   // 순서·설득·응급 순서는 개별 선택보다 채점 설명이 곧 오답이다
-  for (const x of r.items) if (['order', 'persuade', 'priority'].includes(x.key) && x.frac < 1) {
+  for (const x of r.items) if (['order', 'cost', 'persuade', 'priority'].includes(x.key) && x.frac < 1) {
     put(x.key, x.detail, x.key === 'persuade' ? c.refusal?.model : x.key === 'priority' ? `올바른 순서: ${c.priority.steps.join(' → ')}` : null);
   }
   return { id: c.id, at: new Date().toISOString(), total: r.total, items, miss };
