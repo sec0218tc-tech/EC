@@ -83,10 +83,11 @@ function renderHome() {
     h('p', { class: 'muted' }, '접수부터 문진, 신체검사, 감별진단, 추가검사, 확정진단, 처치까지 실제 진료 순서대로 진행해요. 검사 메뉴는 모든 케이스가 같으니 선지에서 답을 짐작할 수 없어요.'),
     catalog.ui.difficulty.map(level => byLevel.has(level) && [
       h('h2', null, level === '초급' ? '초급 · 전형적인 증상' : '고급 · 동반 질환, 보호자 거부'),
-      h('div', { class: 'list' }, byLevel.get(level).map(c => {
+      h('div', { class: 'list' }, byLevel.get(level).map((c, i) => {
         const r = results[c.id];
         const inProgress = store.get('ec2-state-' + c.id, null);
-        return h('a', { class: 'card case', href: '#/' + c.id },
+        return h('a', { class: 'case', href: '#/' + c.id },
+          h('span', { class: 'folio' }, String(i + 1).padStart(2, '0')),
           h('div', { class: 'tags' },
             h('span', { class: 'tag' }, spName(c.species)),
             c.emergency && h('span', { class: 'tag warn' }, '응급'),
@@ -111,12 +112,13 @@ function render() {
     class: (i === view ? 'on ' : '') + (i <= S.step ? 'reach' : ''),
     disabled: i > S.step,
     onclick: () => { view = i; render(); },
-  }, `${i + 1}. ${name}`)));
+  }, h('span', { class: 'n' }, String(i + 1).padStart(2, '0')), name)));
   const body = [renderIntake, renderHistory, renderExam, renderProblems, renderDdx1, renderTests, renderFinal, renderTx, renderResult][view]();
   app.replaceChildren(
     h('div', { class: 'case-head' },
       h('a', { href: '#', class: 'back' }, '← 목록'),
-      h('b', null, C.title)),
+      h('b', null, C.title),
+      h('span', { class: 'folio' }, `${String(view + 1).padStart(2, '0')}/${String(STEPS.length).padStart(2, '0')}`)),
     stepper,
     h('section', { class: 'panel' }, body),
   );
@@ -147,7 +149,7 @@ function renderIntake() {
     h('h2', null, '접수'),
     h('dl', { class: 'sig' }, h('dt', null, '종'), h('dd', null, spName(C.species)),
       Object.entries(C.signalment).map(([k, v]) => [h('dt', null, k), h('dd', null, v)])),
-    h('div', { class: 'bubble a' }, h('span', { class: 'who' }, '보호자'), C.cc),
+    h('div', { class: 'bubble a' }, C.cc),
     C.emergency && h('p', { class: 'note warn' }, '응급 내원 케이스예요. 처치 단계에서 먼저 할 처치의 순서도 채점해요.'),
     next('문진 시작'),
   ];
@@ -273,7 +275,7 @@ function resultCard(id, open) {
   return h('details', { class: 'result', open },
     h('summary', null, h('b', null, r.name), (r.rows?.some(x => x.flag) || r.textFlag) && h('span', { class: 'tag warn tiny' }, '이상')),
     r.rows && h('table', null, h('tbody', null, r.rows.map(x => h('tr', { class: x.flag ? 'abn' : '' },
-      h('td', null, x.n), h('td', { class: 'v' }, x.v, x.flag && x.flag !== 'A' ? ` ${x.flag}` : ''), h('td', { class: 'muted' }, [x.u, x.ref && `(${x.ref})`].filter(Boolean).join(' ')))))),
+      h('td', null, x.n), h('td', { class: 'v' }, x.v, x.flag && h('span', { class: 'flag' }, x.flag === 'A' ? '이상' : x.flag)), h('td', { class: 'muted' }, [x.u, x.ref && `(${x.ref})`].filter(Boolean).join(' ')))))),
     r.text && h('p', { class: r.textFlag ? 'abn-text' : '' }, r.text),
     r.note && h('p', { class: 'muted small' }, r.note));
 }
