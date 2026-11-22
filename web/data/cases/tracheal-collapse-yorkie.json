@@ -10,10 +10,10 @@
     "weight": { "a": "1년 사이에 1 kg 쪘어요.", "chart": "1년간 체중 증가 1 kg", "key": true },
     "env": { "a": "아파트 실내에서 지내요. 가족 중에 담배 피우는 사람이 있어요.", "chart": "실내, 간접흡연 노출", "key": true },
     "diet": { "a": "사료랑 간식을 넉넉하게 줘요.", "chart": "간식 과다" },
-    "appetite": { "a": "잘 먹어요.", "chart": "식욕 정상" },
+    "appetite": { "a": "잘 먹어요.", "chart": "식욕 정상", "normal": true },
     "prior": { "a": "작년 건강검진 때 심장 소리가 살짝 있다고 들었어요.", "chart": "작년 심잡음 지적" },
-    "meds": { "a": "약은 안 먹어요.", "chart": "투약 없음" },
-    "neuro": { "a": "기침하다 쓰러진 적은 없어요.", "chart": "실신 없음" }
+    "meds": { "a": "약은 안 먹어요.", "chart": "투약 없음", "normal": true },
+    "neuro": { "a": "기침하다 쓰러진 적은 없어요.", "chart": "실신 없음", "normal": true }
   },
   "exam": {
     "bcs": { "v": "BCS 7/9, 과체중", "key": true },

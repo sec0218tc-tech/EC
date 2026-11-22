@@ -134,7 +134,7 @@ function render() {
       h('b', null, C.title),
       h('span', { class: 'folio' }, `${String(view + 1).padStart(2, '0')}/${String(STEPS.length).padStart(2, '0')}`)),
     stepper,
-    charting ? h('div', { class: 'split' }, chart, h('section', { class: 'panel' }, body)) : h('section', { class: 'panel' }, body),
+    charting ? h('div', { class: 'split' + (chartOpen ? '' : ' folded') }, h('section', { class: 'panel' }, body), chart) : h('section', { class: 'panel' }, body),
   );
   if (keep) for (const [cls, top] of keep) { const el = app.querySelector('.' + cls.split(' ')[0]); if (el) el.scrollTop = top; }
   if (charting) { sheetRoot.replaceChildren(); scrollChart(chart); } else renderSheet();
@@ -482,7 +482,7 @@ function recordBody(all = true) {
   return [
     h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
     h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
-    sec('문진', [...S.asked.map(id => li('q' + id, null, E.answerOf(catalog, C, id).chart)), ...S.free.map((f, i) => li('f' + i, null, `${f.q} → ${f.a}`))]),
+    sec('문진', [...S.asked.map(id => { const a = E.answerOf(catalog, C, id); return li('q' + id, { class: a.flag ? 'abn' : null }, [a.chart, a.flag && flagTag('A')]); }), ...S.free.map((f, i) => li('f' + i, null, `${f.q} → ${f.a}`))]),
     sec('신체검사', exams.map(e => li('x' + e.id, { class: e.flag ? 'abn' : null }, [`${e.name}: ${e.v}`, e.flag && flagTag(examFlag(e))]))),
     sec('문제 목록', S.problems.map(i => li('p' + i, null, C.problems[i].t))),
     (all || ddx.length > 0) && sec('감별진단', ddx),

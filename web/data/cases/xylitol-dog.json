@@ -8,10 +8,10 @@
     "onset": { "a": "40분 전에 발견했어요. 언제 먹었는지는 정확히 모르지만 한 시간 안쪽일 거예요.", "chart": "섭취 약 40–60분 전 추정", "key": true },
     "vomit": { "a": "오는 길에 한 번 토했어요. 껌 조각이 조금 보였어요.", "chart": "내원 중 구토 1회 (껌 조각)", "key": true },
     "activity": { "a": "괜찮아 보였는데 방금 좀 비틀거린 것 같기도 해요.", "chart": "보행 이상 의심 (방금)", "key": true },
-    "neuro": { "a": "떨거나 경련하지는 않았어요.", "chart": "경련 없음" },
-    "appetite": { "a": "아침은 잘 먹었어요.", "chart": "식욕 정상" },
-    "prior": { "a": "아픈 적 없어요.", "chart": "특이 과거력 없음" },
-    "meds": { "a": "먹는 약 없어요.", "chart": "투약 없음" }
+    "neuro": { "a": "떨거나 경련하지는 않았어요.", "chart": "경련 없음", "normal": true },
+    "appetite": { "a": "아침은 잘 먹었어요.", "chart": "식욕 정상", "normal": true },
+    "prior": { "a": "아픈 적 없어요.", "chart": "특이 과거력 없음", "normal": true },
+    "meds": { "a": "먹는 약 없어요.", "chart": "투약 없음", "normal": true }
   },
   "exam": {
     "mentation": { "v": "약간 둔하고 반응이 느림", "key": true },

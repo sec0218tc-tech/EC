@@ -10,9 +10,9 @@
     "activity": { "a": "안절부절못하다가 지금은 서 있기도 힘들어해요.", "chart": "불안 → 허약" },
     "pain": { "a": "배가 북처럼 빵빵해요. 만지면 싫어해요.", "chart": "복부 팽만, 통증", "key": true },
     "breath": { "a": "숨을 엄청 빨리 쉬어요.", "chart": "빈호흡" },
-    "toxin": { "a": "먹은 건 사료뿐이에요.", "chart": "이물·독성물질 섭취력 없음" },
-    "similar": { "a": "이런 적은 처음이에요.", "chart": "첫 발병" },
-    "repro": { "a": "중성화했어요.", "chart": "중성화 수컷" }
+    "toxin": { "a": "먹은 건 사료뿐이에요.", "chart": "이물·독성물질 섭취력 없음", "normal": true },
+    "similar": { "a": "이런 적은 처음이에요.", "chart": "첫 발병", "normal": true },
+    "repro": { "a": "중성화했어요.", "chart": "중성화 수컷", "normal": true }
   },
   "exam": {
     "mentation": { "v": "불안, 서 있기 힘들어하며 비틀거림", "key": true },

@@ -9,9 +9,9 @@
     "prior": { "a": "2년 전 검진 때 심장 소리가 조금 있다고 했는데, 약은 안 먹었어요.", "chart": "2년 전 심잡음 진단, 무치료", "key": true },
     "activity": { "a": "산책 나가면 금방 주저앉아요. 몇 달 전부터 그랬어요.", "chart": "운동 불내성 수개월", "key": true },
     "appetite": { "a": "오늘은 안 먹어요.", "chart": "식욕 저하" },
-    "neuro": { "a": "쓰러진 적은 없어요.", "chart": "실신 없음" },
-    "meds": { "a": "심장약은 안 먹어요.", "chart": "투약 없음" },
-    "repro": { "a": "중성화했어요.", "chart": "중성화 수컷" }
+    "neuro": { "a": "쓰러진 적은 없어요.", "chart": "실신 없음", "normal": true },
+    "meds": { "a": "심장약은 안 먹어요.", "chart": "투약 없음", "normal": true },
+    "repro": { "a": "중성화했어요.", "chart": "중성화 수컷", "normal": true }
   },
   "exam": {
     "mentation": { "v": "불안, 앉은 자세로 목을 빼고 호흡", "key": true },
