@@ -66,7 +66,7 @@ async function boot() {
     fetch('data/cases/index.json').then(r => r.json()),
     fetch('data/fees.json').then(r => r.json()).catch(() => null), // 없으면 모든 비용이 추정치
   ]);
-  E.applyFees(catalog, fees);
+  catalog.feesRaw = fees;
   window.addEventListener('hashchange', route);
   route();
 }
@@ -77,6 +77,7 @@ async function route() {
   if (!id || !index.some(c => c.id === id)) { C = null; return renderHome(); }
   if (!C || C.id !== id) {
     C = await fetch(`data/cases/${id}.json`).then(r => r.json());
+    E.applyFees(catalog, catalog.feesRaw, E.weightOf(C)); // 체중별 가격
     S = { ...E.newState(), ...store.get('ec2-state-' + id, {}) };
     view = S.step;
   }
@@ -289,7 +290,7 @@ function costBar() {
 function feeSource() {
   const f = F();
   return h('p', { class: 'muted small' }, f
-    ? [`진찰료 ${E.fmtWon(E.consultFee(catalog))} 포함. `, consultBadge(), ` 표시는 `, h('a', { href: f.source.url, target: '_blank', rel: 'noopener' }, f.source.name), ` (${f.source.accessed} 확인)에서 직접 본 금액에만 붙였고, 나머지는 추정치예요.`]
+    ? [`진찰료 ${E.fmtWon(E.consultFee(catalog))} 포함. `, consultBadge(), ` 는 `, h('a', { href: f.source.url, target: '_blank', rel: 'noopener' }, f.source.name), `의 ${f.source.stat}이에요${E.weightOf(C) ? ` (영상검사는 체중 ${E.weightOf(C)}kg이라 ${E.tierOf(E.weightOf(C))}kg 구간 값)` : ''}. 표에 없는 검사는 추정치예요.`]
     : '비용 기준 파일을 불러오지 못해 모든 금액이 추정치예요.');
 }
 

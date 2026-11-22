@@ -32,12 +32,17 @@ export function examOf(catalog, c, id) {
 }
 
 // ---------- 비용 ----------
-// fees.json 을 검사 메뉴에 합친다: 공시 사이트에서 확인한 금액만 verified, 나머지는 catalog 의 추정치.
-export function applyFees(catalog, fees) {
+// fees.json 을 검사 메뉴에 합친다: 표에서 옮긴 금액만 verified, 나머지는 catalog 의 추정치.
+// kg(환자 체중)를 주면 체중별 중간값을 쓴다. 케이스를 열 때마다 다시 부른다.
+export const weightOf = c => parseFloat(c?.signalment?.['체중']) || null;
+export const tierOf = kg => (kg == null ? null : kg <= 7.5 ? 5 : kg <= 15 ? 10 : 20);
+export function applyFees(catalog, fees, kg = null) {
+  const tier = tierOf(kg);
   for (const t of catalog.tests) {
+    t.estimate ??= t.cost; // catalog 원래 값
     const f = fees?.tests?.[t.id];
     t.verified = f?.cost != null;
-    if (t.verified) t.cost = f.cost;
+    t.cost = t.verified ? (tier && f.kg?.[tier]) || f.cost : t.estimate;
   }
   catalog.fees = fees || null;
   return catalog;
