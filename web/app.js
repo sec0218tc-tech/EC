@@ -100,6 +100,10 @@ async function renderHome() {
   if (location.hash.replace(/^#\/?/, '')) return; // 기록을 읽는 사이 다른 화면으로 갔으면 그리지 않는다
   app.replaceChildren(...[
     h('p', { class: 'muted' }, '한 환자를 실제 진료 순서대로 끝까지 봅니다. 접수, 문진, 신체검사, 감별, 검사, 진단, 처치. 검사 메뉴는 모든 케이스에서 같습니다.'),
+    h('a', { class: 'case', href: 'cpr.html' }, h('span', { class: 'folio' }, 'CPR'),
+      h('div', { class: 'tags' }, h('span', { class: 'tag warn' }, '응급'), h('span', { class: 'tag' }, 'RECOVER 2024')),
+      h('div', { class: 'title' }, '심정지 CPR 연습: 무작위 상황에서 대처 고르기'),
+      h('div', { class: 'muted small' }, '압박·환기·리듬별 처치·약물 용량·소생 후 감시')),
     tried > 0 && h('a', { class: 'btn notes-link', href: '#/notes' }, h('span', null, '오답 노트 · 약점 분석'), h('span', { class: 'muted small' }, `${tried}개 케이스 →`)),
     catalog.ui.difficulty.map(level => byLevel.has(level) && [
       h('h2', null, level === '초급' ? '초급 · 전형적 증례' : '고급 · 동반 질환과 보호자 거부'),

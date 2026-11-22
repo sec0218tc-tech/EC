@@ -1,0 +1,37 @@
+/* CPR 연습 화면 전용. 공통 토큰과 부품은 style.css 를 그대로 쓴다. */
+.cpr-tabs .tab { font-size: .9rem; font-weight: 700; min-height: 44px; display: flex; align-items: center; padding: 0 16px 0 0; margin-right: 4px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.cpr-tabs .tab.on { color: var(--text); border-bottom-color: var(--accent); }
+.patient figcaption span + span { font-size: .85rem; }
+.cpr-progress { margin-top: 16px; }
+.cpr-progress .folio { font-weight: 700; font-variant-numeric: tabular-nums; }
+.cpr-q { font-size: 1.15rem; line-height: 1.5; letter-spacing: -.01em; margin: 16px 0 12px; }
+.opt.right { font-weight: 700; color: var(--accent); }
+.opt.right .num { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.opt.wrong { color: var(--abn); }
+.opt.wrong .num { background: var(--abn); border-color: var(--abn); color: var(--on-abn); }
+.opt:disabled { cursor: default; }
+.opt:disabled:not(.right):not(.wrong) { color: var(--muted); }
+.cpr-why { margin-top: 16px; padding: 12px 14px; border: 2px solid var(--accent); }
+.cpr-why.no { border-color: var(--abn); }
+.cpr-why p { margin: 0 0 8px; }
+.cpr-why .verdict { font-weight: 700; font-size: 1.05rem; color: var(--accent); }
+.cpr-why.no .verdict { color: var(--abn); }
+.ecg { display: block; width: 100%; height: auto; margin: 0 0 12px; background: var(--tint); border: 1px solid var(--line); }
+.ecg .grid line { stroke: var(--line); stroke-width: .5; }
+.ecg .grid line:nth-child(5n+1) { stroke-width: 1.2; }
+.ecg path { fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linejoin: round; }
+.ecg text { font-size: 8px; fill: var(--muted); }
+.cpr-log { display: grid; grid-template-columns: 3.5rem 1fr; column-gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.cpr-log b { grid-row: span 2; font-size: 1.2rem; color: var(--accent); }
+.dose { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .88rem; font-variant-numeric: tabular-nums; }
+.dose th { text-align: left; font-size: .75rem; color: var(--muted); padding: 6px 6px 6px 0; border-bottom: 1px solid var(--rule); }
+.dose td { padding: 8px 6px 2px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.dose tr.note-row td { border-top: 0; padding: 0 0 8px; }
+.dose td:last-child, .dose th:last-child { text-align: right; padding-right: 0; }
+label.row { margin: 8px 0; } label.row input { max-width: 8rem; }
+.sr { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.cpr-photo { display: block; width: 100%; height: auto; border: 1px solid var(--line); margin: 8px 0; }
+.item summary { cursor: pointer; list-style: none; }
+.item summary::-webkit-details-marker { display: none; }
+.dose tr.note-row td { text-align: left; }
+.dose .abn-text { color: var(--abn); }

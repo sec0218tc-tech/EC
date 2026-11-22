@@ -28,6 +28,12 @@ node web/test/check.mjs                   # 케이스 데이터 검사 + 채점 
    - `verified`: 교과서로 수치·처치를 확인했으면 확인 내용(예: "Ettinger 9판 대조, 2026-12"), 아니면 빈 문자열.
 2. `node web/test/check.mjs --index` 로 목록을 갱신하고 검사합니다 (모범 풀이가 100점인지까지 확인).
 
+### CPR 연습 (`web/cpr.html`)
+2024 RECOVER CPR 지침(2012판 개정) 기준. 무작위 환자(종·체중·흉곽 형태·기저 원인·시작 장면·리듬)로 인지 → 압박 → 환기 → 사이클 → ETCO2 → 리듬 판독 → 리듬별 처치 → 용량 계산 → 원인별 처치 → ROSC → 소생 후 감시를 하나씩 고릅니다. 정답 수와 단계별 걸린 시간을 기기에 기록합니다.
+- `web/cpr-data.js` — 지침 수치(용량, 제세동, BLS). `v: false`/`concV: false` 는 원문에서 직접 확인하지 못한 값
+- `web/cpr-engine.js` — 상황 생성과 문제, `web/cpr.js`·`web/cpr.css` — 화면
+- `node web/test/cpr.mjs` — 3000개 무작위 상황에서 정답이 하나인지, 용량 계산이 맞는지 검사
+
 ### AI 기능 (Gemini)
 자유 질문 답변과 설득 판정은 Supabase Edge Function `ai` 가 Gemini 를 호출합니다. Gemini 키는 서버에만 있습니다.
 
