@@ -84,13 +84,30 @@
     "192례 연구에서 섭취량이 많을수록 증상이 나타났고, 적절한 치료로 모두 퇴원했어요 (DuHadway 2015).",
     "내원 시 저칼륨혈증, 내원 전 증상, 구토 유도를 하지 않은 경우가 간병증과 관련이 있었어요 (Lovell 2025).",
     "지금 멀쩡해 보여도 섭취량이 많으면 입원해 혈당과 간 수치를 반복 확인해요.",
-    "활성탄은 자일리톨에 효과가 거의 없어요."
+    "활성탄은 자일리톨에 효과가 거의 없어요.",
+    "보호자가 전화하면 집에서 구토를 유도하지 말고 바로 내원하게 해요. 저혈당 증상이 있으면 이동 중 볼 안쪽 점막에 시럽을 발라 줄 수 있지만 내원을 늦추면 안 돼요 (RECOVER 2026)."
   ],
   "verified": "",
   "sources": [
-    { "label": "DuHadway et al. JVECC 2015 — 자일리톨 섭취 192례", "url": "https://doi.org/10.1111/vec.12350" },
-    { "label": "Lovell et al. JVECC 2025 — 자일리톨 섭취 95례", "url": "https://doi.org/10.1111/vec.70041" },
-    { "label": "Murphy & Dunayer. Vet Clin North Am Small Anim Pract 2018", "url": "https://doi.org/10.1016/j.cvsm.2018.06.004" },
-    { "label": "Buishand. Vet Sci 2022 — 개 인슐린종", "url": "https://doi.org/10.3390/vetsci9100540" }
-  ]
+    { "label": "DuHadway et al. JVECC 2015 — 자일리톨 섭취 192례", "url": "https://doi.org/10.1111/vec.12350", "level": "prior" },
+    { "label": "Lovell et al. JVECC 2025 — 자일리톨 섭취 95례", "url": "https://doi.org/10.1111/vec.70041", "level": "prior" },
+    { "label": "Murphy & Dunayer. Vet Clin North Am Small Anim Pract 2018", "url": "https://doi.org/10.1016/j.cvsm.2018.06.004", "level": "prior" },
+    { "label": "Buishand. Vet Sci 2022 — 개 인슐린종", "url": "https://doi.org/10.3390/vetsci9100540", "level": "prior" },
+    { "label": "RECOVER 2026 응급처치 지침 (독성물질·저혈당 부분)", "url": "https://doi.org/10.1111/vec.70138", "ref": "recover-firstaid-2026", "level": "sections" }
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "덱스트로스 볼루스·CRI 농도와 혈당 재측정 간격",
+        "book": "Ettinger",
+        "topic": "Hypoglycemia, Xylitol toxicosis"
+      },
+      {
+        "item": "간병증 위험 용량(g/kg) 기준",
+        "book": "Ettinger",
+        "topic": "Xylitol toxicosis"
+      }
+    ]
+  }
 }

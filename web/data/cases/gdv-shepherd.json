@@ -95,7 +95,27 @@
   ],
   "verified": "",
   "sources": [
-    { "label": "Mur et al. Vet Radiol Ultrasound 2025 — GDV 방사선 소견", "url": "https://doi.org/10.1111/vru.13445" },
-    { "label": "소동물 응급·외과 교과서 수준 (교과서 대조 필요)" }
-  ]
+    {"label": "Mur et al. Vet Radiol Ultrasound 2025 — GDV 방사선 소견", "url": "https://doi.org/10.1111/vru.13445", "level": "prior"},
+    {"label": "소동물 응급·외과 교과서 수준 — 직접 대조 안 함", "level": "textbook"}
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "수술 전후 항생제: ENOVAT 2025는 위고정술만 하면 예방 항생제를 권하지 않지만, 위벽 허혈·괴사가 있는 GDV에도 그대로 적용되는지",
+        "book": "Fossum",
+        "topic": "Gastric dilatation-volvulus"
+      },
+      {
+        "item": "쇼크 수액 용량과 고장성 식염수 사용",
+        "book": "Ettinger",
+        "topic": "Shock, Fluid therapy"
+      },
+      {
+        "item": "리도카인 시작 기준(심실빈맥 속도)",
+        "book": "Ettinger",
+        "topic": "Ventricular arrhythmias"
+      }
+    ]
+  }
 }
