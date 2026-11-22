@@ -211,15 +211,28 @@ li.abn::marker { content: "■  "; font-size: .7em; }
 .coach b { font-weight: 700; margin-right: 4px; }
 
 /* 문진·신체검사·문제 목록: 누르면 바로 적히는 진료 기록 차트.
-   페이지는 고정하고 차트와 선택지가 각자 스크롤된다. 폰은 위 차트(최대 40%) + 아래 선택지, 넓은 화면은 좌우 두 열. */
+   페이지는 고정하고 차트와 선택지가 각자 스크롤된다. 진료 기록은 폰에서도 항상 오른쪽 열(폰 44%, 접으면 얇은 띠). */
 html.charting { overflow: hidden; }
 main.wide { height: calc(100vh - 50px); height: calc(100dvh - 50px); display: flex; flex-direction: column; padding-bottom: 0; overflow: hidden; }
-.split { flex: 1; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 0 32px; }
-.split > .panel { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px calc(24px + env(safe-area-inset-bottom)); }
-.chart { display: flex; flex-direction: column; min-height: 0; background: var(--bg); margin: 0 -16px; padding: 0 16px; border-bottom: 2px solid var(--rule); }
+.split { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 44%); grid-template-rows: minmax(0, 1fr); }
+.split.folded { grid-template-columns: minmax(0, 1fr) 44px; }
+.split > .panel { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; margin-left: -16px; padding: 0 12px calc(24px + env(safe-area-inset-bottom)) 16px; }
+.chart { display: flex; flex-direction: column; min-height: 0; background: var(--bg); margin-right: -16px; padding: 0 16px 0 10px; border-left: 2px solid var(--rule); }
+.chart .handle-title { gap: 6px; font-size: .88rem; }
+.chart-head { flex-wrap: wrap; gap: 0 8px; }
+.split.folded .chart { padding: 0 6px; }
+.split.folded .chart-head { flex-direction: column; justify-content: flex-start; padding-top: 12px; }
+.split.folded .handle-title { writing-mode: vertical-rl; }
+.split.folded .fold { writing-mode: vertical-rl; margin-top: 10px; }
+@media (max-width: 899px) {
+  .split > .panel h2 { font-size: 1.25rem; }
+  .split > .panel .chip { font-size: .85rem; padding: 8px 10px; }
+  .split > .panel .free { flex-wrap: wrap; } .split > .panel .free .btn { flex: 1; }
+  .chart-body { font-size: .82rem; } .chart-body ul { font-size: inherit; padding-left: 14px; }
+}
 .chart-head { font: inherit; font-weight: 700; width: 100%; min-height: 44px; border: 0; background: none; color: var(--text); padding: 8px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; flex: none; }
 .chart-head .fold { color: var(--accent); font-weight: 700; }
-.chart-body { position: relative; max-height: 40vh; max-height: 40dvh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: 10px; border-top: 1px solid var(--line); }
+.chart-body { position: relative; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: 10px; border-top: 1px solid var(--line); }
 .chart.closed .chart-body { display: none; }
 .chart-body > p { margin: 8px 0 0; }
 .chart-body h4 { border-top: 1px solid var(--rule); padding-top: 6px; margin: 12px 0 4px; color: var(--text); }
@@ -241,13 +254,15 @@ button.exam:disabled { cursor: default; background: none; }
 
 @media (min-width: 900px) {
   main.wide { max-width: 1120px; }
-  .split { grid-template-columns: minmax(300px, 380px) 1fr; grid-template-rows: minmax(0, 1fr); }
+  .split, .split.folded { grid-template-columns: 1fr minmax(300px, 380px); gap: 0 32px; }
   .split > .panel { margin: 0; padding: 0 4px 32px 0; }
-  .chart { margin: 20px 0 16px; padding: 0; border: 0; border-top: 2px solid var(--rule); }
+  .chart, .split.folded .chart { margin: 20px 0 16px; padding: 0; border: 0; border-top: 2px solid var(--rule); }
+  .split.folded .chart-head { flex-direction: row; padding-top: 8px; }
+  .split.folded .handle-title { writing-mode: horizontal-tb; }
   .chart-head { cursor: default; pointer-events: none; }
   .chart-head .fold { display: none; }
   .chart.closed .chart-body { display: block; }
-  .chart-body { flex: 1; max-height: none; border-bottom: 1px solid var(--line); }
+  .chart-body { border-bottom: 1px solid var(--line); }
 }
 
 /* 감별 정리 뒤 확인 창: 시트처럼 아래에서 올라오는 직각 상자 */

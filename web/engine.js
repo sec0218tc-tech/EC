@@ -21,7 +21,7 @@ export function questionsFor(catalog) { return catalog.questions; }
 export function answerOf(catalog, c, qid) {
   const base = catalog.questions.find(q => q.id === qid);
   const o = c.history?.[qid] || {};
-  return { q: base.q, a: o.a ?? base.a, chart: o.chart ?? (o.a ? o.a : base.chart), key: !!o.key, changed: !!o.a };
+  return { q: base.q, a: o.a ?? base.a, chart: o.chart ?? (o.a ? o.a : base.chart), key: !!o.key, changed: !!o.a, flag: !!o.a && !o.normal };
 }
 
 export function examOf(catalog, c, id) {

@@ -14,6 +14,12 @@ if (process.argv.includes('--index')) {
 }
 const index = JSON.parse(readFileSync(new URL('cases/index.json', dir)));
 
+// 문진: 케이스가 바꾼 답은 이상 소견, normal: true 로 표시한 답과 기본 답은 정상
+{ const c = JSON.parse(readFileSync(new URL('cases/addison-poodle.json', dir)));
+  assert.equal(E.answerOf(catalog, c, 'vomit').flag, true);
+  assert.equal(E.answerOf(catalog, c, 'meds').flag, false);
+  assert.equal(E.answerOf(catalog, c, 'urine').flag, false); }
+
 // flagOf 기본 동작
 assert.equal(E.flagOf('42.6', '5.05–16.76'), 'H');
 assert.equal(E.flagOf('1.2', '5.05–16.76'), 'L');
