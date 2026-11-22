@@ -2,6 +2,7 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import * as E from '../engine.js';
+import * as N from '../notebook.js';
 
 const dir = new URL('../data/', import.meta.url);
 const catalog = JSON.parse(readFileSync(new URL('catalog.json', dir)));
@@ -89,10 +90,32 @@ for (const f of files) {
   const r = E.score(catalog, c, s);
   if (r.total !== 100) fail(id, `모범 풀이 점수 ${r.total}: ${r.items.filter(x => x.frac < 1).map(x => x.label + ' ' + x.detail).join(' | ')}`);
 
+  // 오답 노트: 모든 케이스에 계통이 있고, 모범 풀이(+핵심 신체검사)는 오답이 없고, 빈 풀이는 오답이 남는다
+  if (!N.SYSTEM[id]) fail(id, 'notebook.js SYSTEM 에 계통 없음');
+  s.examined = Object.entries(c.exam || {}).filter(([, o]) => o.key).map(([x]) => x);
+  const good = N.attemptFrom(catalog, c, s, r);
+  if (Object.keys(good.miss).length) fail(id, `모범 풀이에 오답 ${JSON.stringify(good.miss)}`);
+  const bad = N.attemptFrom(catalog, c, E.newState());
+  for (const k of ['history', 'ddx', 'final', 'tx']) if (!bad.miss[k]?.length) fail(id, `빈 풀이 오답 노트에 ${k} 없음`);
+
   // 아무것도 안 하면 낮은 점수
   const empty = E.score(catalog, c, E.newState());
   if (empty.total > 30) fail(id, `빈 풀이 점수가 너무 높음 ${empty.total}`);
   console.log(`✓ ${id} (${c.difficulty}${c.emergency ? ', 응급' : ''}) 빈 풀이 ${empty.total}점`);
 }
+// 약점 분석: 케이스마다 최근 시도만 보고, 낮은 단계·계통이 먼저, 80점 미만은 다시 풀기 추천
+{ const at = (id, total, t, items) => ({ id, total, at: t, items, miss: {} });
+  const A = N.analyze([
+    at('ckd-cat', 30, '2026-01-01', [{ key: 'history', frac: 0 }, { key: 'tx', frac: 0.5 }]),
+    at('ckd-cat', 90, '2026-01-02', [{ key: 'history', frac: 1 }, { key: 'tx', frac: 0.8 }]),
+    at('gdv-shepherd', 40, '2026-01-01', [{ key: 'history', frac: 0.5 }, { key: 'tx', frac: 0.2 }]),
+  ], index);
+  assert.equal(A.cases, 2); assert.equal(A.avg, 65);
+  assert.equal(A.stages[0].key, 'tx'); assert.equal(A.stages[0].avg, 0.5);
+  assert.equal(A.systems[0].name, '소화기');
+  assert.equal(A.retry[0].id, 'gdv-shepherd');
+  assert.equal(N.systemOf(A.retry[1].id), '소화기'); // 약한 계통의 안 푼 케이스
+  assert.equal(N.analyze([], index), null); }
+
 if (problems) { console.error(`${problems}개 문제`); process.exit(1); }
 console.log(`모든 케이스 통과 (${files.length}개)`);
