@@ -16,6 +16,7 @@ let busy = false;
 let sheetOpen = false;
 let askMore = false; // 감별 수정 뒤 '추가 검사 더 할까요?' 창
 let chartOpen = true; // 폰에서 문진·신체검사·문제 목록 위의 차트 펼침 여부
+let shown = -1; // 마지막으로 그린 단계: 같은 단계를 다시 그릴 땐 각 영역의 스크롤 위치를 지킨다
 let fresh = null; // 방금 차트에 기록된 항목. 차트 안에서만 그 줄로 스크롤한다
 const CHART_STEPS = [1, 2, 3]; // 누르면 바로 왼쪽 차트에 기록되는 단계
 
@@ -122,7 +123,11 @@ function render() {
   const body = [renderIntake, renderHistory, renderExam, renderProblems, renderDdx1, renderTests, renderFinal, renderTx, renderResult][view]();
   const charting = CHART_STEPS.includes(view);
   const chart = charting && renderChart();
+  // 차트 단계에선 차트와 선택지가 각자 스크롤된다. 다시 그려도 두 상자의 위치를 그대로 둔다
+  const keep = shown === view && [...app.querySelectorAll('.panel, .chart-body')].map(el => [el.className, el.scrollTop]);
+  shown = view;
   app.classList.toggle('wide', charting);
+  document.documentElement.classList.toggle('charting', charting);
   app.replaceChildren(
     h('div', { class: 'case-head' },
       h('a', { href: '#', class: 'back' }, '← 목록'),
@@ -131,6 +136,7 @@ function render() {
     stepper,
     charting ? h('div', { class: 'split' }, chart, h('section', { class: 'panel' }, body)) : h('section', { class: 'panel' }, body),
   );
+  if (keep) for (const [cls, top] of keep) { const el = app.querySelector('.' + cls.split(' ')[0]); if (el) el.scrollTop = top; }
   if (charting) { sheetRoot.replaceChildren(); scrollChart(chart); } else renderSheet();
   fresh = null;
   const on = stepper.querySelector('.on'); // 페이지는 그대로 두고 단계 바만 가로로 맞춘다
@@ -467,9 +473,9 @@ function recordBody(all = true) {
   const li = (key, attrs, text) => h('li', { ...attrs, class: [attrs?.class, fresh === key && 'new'].filter(Boolean).join(' ') || null }, text);
   const abnRows = S.ordered.flatMap(id => {
     const r = E.testResult(catalog, C, id);
-    const rows = (r.rows || []).filter(x => x.flag).map(x => `${x.n} ${x.v}${x.u ? ' ' + x.u : ''}${x.flag !== 'A' ? ' ' + x.flag : ''}`);
-    if (r.textFlag) rows.push(r.text);
-    return [h('li', null, h('b', null, r.name + ': '), rows.length ? rows.join(', ') : '이상 없음')];
+    const rows = (r.rows || []).filter(x => x.flag).map(x => h('span', { class: 'hit' }, `${x.n} ${x.v}${x.u ? ' ' + x.u : ''}`, flagTag(x.flag)));
+    if (r.textFlag) rows.push(h('span', { class: 'hit' }, r.text, flagTag('A')));
+    return [h('li', { class: rows.length ? 'abn' : null }, h('b', null, r.name + ': '), rows.length ? rows.flatMap((x, i) => i ? [', ', x] : [x]) : '이상 없음')];
   });
   const sec = (title, list, empty = '아직 없음') => [h('h4', null, title), list.length ? h('ul', null, list) : h('p', { class: 'muted small' }, empty)];
   const ddx = (S.ddx2 || S.ddx1).map(i => h('li', null, C.dx[i].t));
@@ -477,12 +483,17 @@ function recordBody(all = true) {
     h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
     h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
     sec('문진', [...S.asked.map(id => li('q' + id, null, E.answerOf(catalog, C, id).chart)), ...S.free.map((f, i) => li('f' + i, null, `${f.q} → ${f.a}`))]),
-    sec('신체검사', exams.map(e => li('x' + e.id, { class: e.flag ? 'abn' : null }, `${e.name}: ${e.v}`))),
+    sec('신체검사', exams.map(e => li('x' + e.id, { class: e.flag ? 'abn' : null }, [`${e.name}: ${e.v}`, e.flag && flagTag(examFlag(e))]))),
     sec('문제 목록', S.problems.map(i => li('p' + i, null, C.problems[i].t))),
     (all || ddx.length > 0) && sec('감별진단', ddx),
     (all || abnRows.length > 0) && sec(`추가검사 (${E.fmtWon(totalCost())})`, abnRows),
   ];
 }
+
+// 이상 소견 라벨: 수치는 H/L, 그 밖은 '이상'
+// 신체검사 값·참고범위엔 단위가 붙어 있어 앞의 숫자 부분만 비교한다 (예: '56회/분' vs '60–160회/분 (소형견 ~180)')
+const examFlag = e => E.flagOf(parseFloat(e.v), String(e.ref).match(/^[<>]?\s*-?[\d.]+(\s*[–-]\s*-?[\d.]+)?/)?.[0]) || 'A';
+const flagTag = f => h('span', { class: 'flag' }, f === 'A' ? '이상' : f);
 
 function renderChart() {
   return h('aside', { class: 'chart' + (chartOpen ? '' : ' closed'), 'aria-label': '진료 기록' },
