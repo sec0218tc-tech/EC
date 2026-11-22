@@ -51,7 +51,7 @@
   "testing": {
     "required": ["tt4", "chem", "cbc", "ua"],
     "useful": ["sdma", "upc", "fructosamine", "echo", "ntprobnp", "xrthorax", "glucose", "ecg", "usabd"],
-    "after": { "tt4": ["chem"] },
+    "after": {},
     "why": "노령묘의 다식·체중 감소·빈맥·갑상선 결절은 총 T4로 확진해요. CBC·화학·요검사로 동반 질환(당뇨, CKD)을 보고, 갑상선기능항진증이 신기능을 가릴 수 있어 SDMA도 도움이 돼요. 심잡음과 고혈압이 있어 심장 초음파도 의미 있어요."
   },
   "dx": [
