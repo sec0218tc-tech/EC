@@ -107,5 +107,20 @@
   "verified": "",
   "sources": [
     { "label": "Van Lanen & Sande. Top Companion Anim Med 2014 — 개 부신피질기능저하증", "url": "https://doi.org/10.1053/j.tcam.2014.10.001" }
-  ]
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "Na:K 비, 기저 코르티솔 선별 기준과 ACTH 자극 검사 해석",
+        "book": "Ettinger",
+        "topic": "Hypoadrenocorticism"
+      },
+      {
+        "item": "덱사메타손·하이드로코티손·DOCP 용량과 고칼륨 응급 처치",
+        "book": "Ettinger",
+        "topic": "Hypoadrenocorticism 치료"
+      }
+    ]
+  }
 }

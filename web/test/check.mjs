@@ -2,9 +2,11 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import * as E from '../engine.js';
+import * as N from '../notebook.js';
 
 const dir = new URL('../data/', import.meta.url);
-const catalog = JSON.parse(readFileSync(new URL('catalog.json', dir)));
+const fees = JSON.parse(readFileSync(new URL('fees.json', dir)));
+const catalog = E.applyFees(JSON.parse(readFileSync(new URL('catalog.json', dir))), fees);
 const files = readdirSync(new URL('cases/', dir)).filter(f => f.endsWith('.json') && f !== 'index.json').sort();
 // --index: 케이스 파일들로 cases/index.json 을 다시 만든다.
 if (process.argv.includes('--index')) {
@@ -28,6 +30,24 @@ const index = JSON.parse(readFileSync(new URL('cases/index.json', dir)));
   assert.equal(order(['echo']), 0);
   assert.equal(order(['xrthorax']), undefined);
   assert.equal(order([]), undefined); }
+
+// 비용: 확인한 금액만 verified, 예산 초과면 감점, 비용 설명이 빠진 설득은 20% 감점
+{ assert.ok(fees.source.url && fees.source.accessed);
+  for (const t of catalog.tests) assert.equal(t.verified, fees.tests[t.id]?.cost != null, t.id);
+  const c = JSON.parse(readFileSync(new URL('cases/pancreatitis-schnauzer.json', dir)));
+  const price = (kg, id) => (E.applyFees(catalog, fees, kg), catalog.tests.find(t => t.id === id).cost);
+  assert.equal(price(3.4, 'usabd'), 50000); assert.equal(price(12, 'usabd'), 55000); assert.equal(price(38, 'usabd'), 66000);
+  assert.equal(price(null, 'usabd'), 57000); assert.equal(price(38, 'cbc'), 34000); assert.equal(price(38, 'sdma'), 35000);
+  E.applyFees(catalog, fees, E.weightOf(c));
+  const budget = E.budgetOf(catalog, c);
+  const cost = ordered => E.score(catalog, c, { ...E.newState(), ordered }).items.find(x => x.key === 'cost').frac;
+  assert.equal(cost(c.testing.required), 1);
+  assert.equal(cost([]), 0);
+  assert.ok(cost([...c.testing.required, 'ct', 'endoscopy']) < 1 && E.totalCost(catalog, { ordered: [...c.testing.required, 'ct'] }) > budget);
+  const persuade = refusal => E.score(catalog, c, { ...E.newState(), refusal }).items.find(x => x.key === 'persuade').frac;
+  assert.equal(persuade({ attempts: 1, passed: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: true }), 1);
+  assert.equal(persuade({ attempts: 1, passed: true, costOk: false }), 0.8); }
 
 // flagOf 기본 동작
 assert.equal(E.flagOf('42.6', '5.05–16.76'), 'H');
@@ -73,6 +93,7 @@ for (const f of files) {
   if (c.emergency && !c.priority) fail(id, '응급 케이스인데 priority 없음');
   if (!c.problems?.some(p => p.key)) fail(id, 'key 문제 없음');
 
+  E.applyFees(catalog, fees, E.weightOf(c));
   // 모범 풀이는 100점이어야 함
   const s = E.newState();
   s.asked = Object.entries(c.history).filter(([, o]) => o.key).map(([q]) => q);
@@ -89,10 +110,32 @@ for (const f of files) {
   const r = E.score(catalog, c, s);
   if (r.total !== 100) fail(id, `모범 풀이 점수 ${r.total}: ${r.items.filter(x => x.frac < 1).map(x => x.label + ' ' + x.detail).join(' | ')}`);
 
+  // 오답 노트: 모든 케이스에 계통이 있고, 모범 풀이(+핵심 신체검사)는 오답이 없고, 빈 풀이는 오답이 남는다
+  if (!N.SYSTEM[id]) fail(id, 'notebook.js SYSTEM 에 계통 없음');
+  s.examined = Object.entries(c.exam || {}).filter(([, o]) => o.key).map(([x]) => x);
+  const good = N.attemptFrom(catalog, c, s, r);
+  if (Object.keys(good.miss).length) fail(id, `모범 풀이에 오답 ${JSON.stringify(good.miss)}`);
+  const bad = N.attemptFrom(catalog, c, E.newState());
+  for (const k of ['history', 'ddx', 'final', 'tx']) if (!bad.miss[k]?.length) fail(id, `빈 풀이 오답 노트에 ${k} 없음`);
+
   // 아무것도 안 하면 낮은 점수
   const empty = E.score(catalog, c, E.newState());
   if (empty.total > 30) fail(id, `빈 풀이 점수가 너무 높음 ${empty.total}`);
   console.log(`✓ ${id} (${c.difficulty}${c.emergency ? ', 응급' : ''}) 빈 풀이 ${empty.total}점`);
 }
+// 약점 분석: 케이스마다 최근 시도만 보고, 낮은 단계·계통이 먼저, 80점 미만은 다시 풀기 추천
+{ const at = (id, total, t, items) => ({ id, total, at: t, items, miss: {} });
+  const A = N.analyze([
+    at('ckd-cat', 30, '2026-01-01', [{ key: 'history', frac: 0 }, { key: 'tx', frac: 0.5 }]),
+    at('ckd-cat', 90, '2026-01-02', [{ key: 'history', frac: 1 }, { key: 'tx', frac: 0.8 }]),
+    at('gdv-shepherd', 40, '2026-01-01', [{ key: 'history', frac: 0.5 }, { key: 'tx', frac: 0.2 }]),
+  ], index);
+  assert.equal(A.cases, 2); assert.equal(A.avg, 65);
+  assert.equal(A.stages[0].key, 'tx'); assert.equal(A.stages[0].avg, 0.5);
+  assert.equal(A.systems[0].name, '소화기');
+  assert.equal(A.retry[0].id, 'gdv-shepherd');
+  assert.equal(N.systemOf(A.retry[1].id), '소화기'); // 약한 계통의 안 푼 케이스
+  assert.equal(N.analyze([], index), null); }
+
 if (problems) { console.error(`${problems}개 문제`); process.exit(1); }
 console.log(`모든 케이스 통과 (${files.length}개)`);

@@ -71,7 +71,8 @@
     ] },
     { "group": "약물", "options": [
       { "t": "오피오이드 진통", "ok": true, "why": "복부 통증 조절과 수술 전후 관리에 필요해요." },
-      { "t": "수술 전후 예방적 항생제 (예: 세파졸린)", "ok": true, "why": "장절개는 오염 수술이라 수술 중 예방적 항생제를 써요." },
+      { "t": "절개 30–60분 전 예방적 항생제 IV 1회 (예: 세파졸린), 긴 수술이면 수술 중 추가", "ok": true, "why": "장절개는 청정-오염 수술이라 수술 중 예방적 항생제를 조건부로 권해요. 수술 후 계속 쓰지는 않고, 장 내용물이 새면 오염 수술로 보고 3–5일 써요.", "ref": ["enovat-sap-2025"]},
+      { "t": "퇴원 후 1주간 예방적 경구 항생제", "ok": false, "why": "청정-오염 위장관 수술 뒤 예방적 항생제를 계속하는 건 강하게 권하지 않아요. 감염을 줄인다는 근거가 없고 내성·부작용만 늘어요.", "ref": ["enovat-sap-2025"]},
       { "t": "메토클로프라미드로 장운동 촉진", "ok": false, "why": "기계적 폐색에서 장운동 촉진제는 금기예요." }
     ] }
   ],
@@ -83,7 +84,23 @@
   ],
   "verified": "",
   "sources": [
-    { "label": "Imaging of GI foreign body obstructions in dogs and cats. Eur J Radiol Open 2026", "url": "https://doi.org/10.1016/j.ejro.2026.100753" },
-    { "label": "소동물 내과·외과 교과서 수준 (교과서 대조 필요)" }
-  ]
+    {"label": "ENOVAT 2025 수술 예방적 항생제 지침", "url": "https://doi.org/10.1111/jsap.70072", "ref": "enovat-sap-2025", "level": "sections"},
+    {"label": "Imaging of GI foreign body obstructions in dogs and cats. Eur J Radiol Open 2026", "url": "https://doi.org/10.1016/j.ejro.2026.100753", "level": "prior"},
+    {"label": "소동물 내과·외과 교과서 수준 — 직접 대조 안 함", "level": "textbook"}
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "장절개 vs 장절제 판단 기준(장 활력 평가)",
+        "book": "Fossum",
+        "topic": "Surgery of the small intestine — foreign bodies"
+      },
+      {
+        "item": "저염소·저칼륨성 대사성 알칼리증 수치와 수액 선택",
+        "book": "Ettinger",
+        "topic": "Acid-base disorders, Intestinal obstruction"
+      }
+    ]
+  }
 }

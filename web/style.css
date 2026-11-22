@@ -140,6 +140,9 @@ button.exam:hover { background: var(--tint); }
 
 /* 추가검사: 청구서처럼 금액 열을 오른쪽에 맞춤 */
 .cost { position: sticky; top: 46px; z-index: 2; background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--rule); font-weight: 700; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.cost .bar { margin-top: 6px; }
+.cost.over, p.over { color: var(--abn); }
+.cost.over .bar i { background: var(--abn); }
 .tests { display: grid; border-top: 1px solid var(--line); }
 .test { font: inherit; text-align: left; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; min-height: 48px; padding: 11px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--text); cursor: pointer; }
 .test:hover:not(:disabled) { background: var(--tint); }
@@ -272,3 +275,24 @@ button.exam:disabled { cursor: default; background: none; }
 .ask .row .btn { flex: 1; }
 .ask-root .backdrop { z-index: 24; }
 @media (min-width: 900px) { .ask { bottom: auto; top: 30vh; max-width: 480px; border: 2px solid var(--rule); } }
+
+/* 오답 노트 */
+.bar.low i { background: var(--abn); }
+.case.retry { grid-template-columns: 1fr; }
+.case.retry > * { grid-column: 1; grid-row: auto; }
+.seg { display: flex; border: 1px solid var(--rule); margin: 4px 0 12px; }
+.seg button { flex: 1; font: inherit; font-weight: 700; min-height: 44px; border: 0; background: var(--bg); color: var(--muted); cursor: pointer; }
+.seg button.on { background: var(--accent); color: var(--on-accent); }
+.group { border-bottom: 1px solid var(--line); padding: 2px 0; }
+.group > summary { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; min-height: 44px; align-items: center; cursor: pointer; }
+.group > summary { list-style: none; }
+.group > summary::-webkit-details-marker { display: none; }
+.group > summary b { flex: 1; }
+.group > summary::after { content: '+'; font-weight: 700; width: 1em; text-align: center; color: var(--accent); }
+.group[open] > summary::after { content: '−'; }
+.group .btn { margin: 8px 0 12px; }
+.miss { margin: 0; padding-left: 18px; }
+.miss li { margin: 6px 0; font-size: .92rem; }
+.miss p { margin: 2px 0 0; font-weight: 400; }
+.more > summary { padding: 10px 0; cursor: pointer; color: var(--muted); }
+.notes-link { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 4px; }

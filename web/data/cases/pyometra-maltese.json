@@ -71,7 +71,7 @@
   "tx": [
     { "group": "안정화", "options": [
       { "t": "등장성 정질액 정맥 수액으로 탈수·관류 교정", "ok": true, "why": "6–7% 탈수와 빈맥이 있어 수술 전 순환 안정화가 우선이에요." },
-      { "t": "광범위 항생제 정맥 투여 (예: 암피실린-설박탐 ± 엔로플록사신)", "ok": true, "why": "주된 원인균은 대장균이고 패혈증 위험이 있어 진단 즉시 시작해요." },
+      { "t": "광범위 항생제 정맥 투여 (예: 암피실린-설박탐 ± 엔로플록사신)", "ok": true, "why": "주된 원인균은 대장균이고 패혈증 위험이 있어 진단 즉시 시작해요. 이미 감염된 수술이라 예방적 항생제 지침(ENOVAT 2025)의 범위 밖이고 치료 목적으로 써요." },
       { "t": "수액 전에 NSAID(멜록시캄)로 해열", "ok": false, "why": "탈수·저관류 상태에서 NSAID는 급성 신손상 위험이 커요." }
     ] },
     { "group": "근본 치료", "options": [
@@ -92,5 +92,28 @@
     "치료 원칙: 수액·IV 항생제로 안정화 후 가능한 빨리 OHE. 탈수·저혈압에서 NSAID는 피해요."
   ],
   "verified": "",
-  "sources": [{ "label": "기존 앱 케이스 각색, 소동물 내과 교과서 수준 (교과서 대조 필요)" }]
+  "sources": [
+    {"label": "ENOVAT 2025 수술 예방적 항생제 지침 (감염 수술은 범위 밖이라는 점만 확인)", "url": "https://doi.org/10.1111/jsap.70072", "ref": "enovat-sap-2025", "level": "sections"},
+    {"label": "기존 앱 케이스 각색, 소동물 내과 교과서 수준 — 직접 대조 안 함", "level": "textbook"}
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "수술 후 항생제 기간과 약 선택",
+        "book": "Fossum",
+        "topic": "Pyometra (ovariohysterectomy)"
+      },
+      {
+        "item": "아글레프리스톤 내과 치료 적응증 (WSAVA 2024 지침은 초록이 없어 확인 못함)",
+        "book": "Ettinger",
+        "topic": "Cystic endometrial hyperplasia–pyometra"
+      },
+      {
+        "item": "수치(WBC, ALP, 요비중)의 전형성",
+        "book": "Ettinger",
+        "topic": "Pyometra"
+      }
+    ]
+  }
 }

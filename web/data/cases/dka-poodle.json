@@ -101,5 +101,20 @@
   "verified": "",
   "sources": [
     { "label": "Gal & Odunayo. Vet Clin North Am Small Anim Pract 2023 — DKA·HHS", "url": "https://doi.org/10.1016/j.cvsm.2023.01.005" }
-  ]
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "DKA 진단 기준과 인슐린 CRI 프로토콜, 칼륨·인 보충",
+        "book": "Ettinger",
+        "topic": "Diabetic ketoacidosis"
+      },
+      {
+        "item": "동반질환(쿠싱·췌장염) 평가 순서",
+        "book": "Ettinger",
+        "topic": "Diabetes mellitus (dog)"
+      }
+    ]
+  }
 }

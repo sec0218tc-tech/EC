@@ -109,5 +109,20 @@
     { "label": "Lim et al. JAVMA 2024 — 개 급성 췌장염 관리", "url": "https://doi.org/10.2460/javma.24.02.0107" },
     { "label": "Xenoulis & Steiner. JSAP 2015 — 개 고지혈증", "url": "https://doi.org/10.1111/jsap.12396" },
     { "label": "Marks et al. JVIM 2018 — GI 보호제 합리적 사용", "url": "https://doi.org/10.1111/jvim.15337" }
-  ]
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "Spec cPL·초음파 소견 해석",
+        "book": "Ettinger",
+        "topic": "Pancreatitis (dog)"
+      },
+      {
+        "item": "진통·제토·조기 영양 권고",
+        "book": "Ettinger",
+        "topic": "Acute pancreatitis 치료"
+      }
+    ]
+  }
 }
