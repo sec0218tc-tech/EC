@@ -41,6 +41,15 @@ function shuffled(n, seed) {
 const toggle = (arr, v) => (arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]);
 const groupBy = (items, f) => items.reduce((m, it) => m.set(f(it), [...(m.get(f(it)) || []), it]), new Map());
 const spName = sp => (sp === 'c' ? '고양이' : '개');
+const ICONS = {
+  chart: '<path d="M9 4h6v3H9z"/><path d="M15 5h3v15H6V5h3"/><path d="M9 11h6M9 15h4"/>',
+};
+function icon(name) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); s.setAttribute('class', 'icon');
+  s.innerHTML = ICONS[name];
+  return s;
+}
 function save() { if (C) store.set('ec2-state-' + C.id, S); }
 
 // ---------- 시작 ----------
@@ -88,7 +97,7 @@ function renderHome() {
       })),
     ]),
     h('details', { class: 'card settings' },
-      h('summary', null, '⚙️ AI 접속 코드'),
+      h('summary', null, 'AI 접속 코드'),
       h('p', { class: 'muted small' }, '자유 질문과 보호자 설득 판정에 쓰는 코드예요. 이 기기에만 저장돼요.'),
       h('form', { class: 'row', onsubmit: e => { e.preventDefault(); setCode(e.target.code.value.trim()); e.target.querySelector('button').textContent = '저장됨 ✓'; } },
         h('input', { name: 'code', type: 'password', value: getCode(), placeholder: '접속 코드', autocomplete: 'off' }),
@@ -112,7 +121,8 @@ function render() {
     h('section', { class: 'panel' }, body),
   );
   renderSheet();
-  stepper.querySelector('.on')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  const on = stepper.querySelector('.on'); // 페이지는 그대로 두고 단계 바만 가로로 맞춘다
+  if (on) stepper.scrollLeft = on.offsetLeft - (stepper.clientWidth - on.offsetWidth) / 2;
   save();
 }
 
@@ -175,7 +185,7 @@ function renderHistory() {
       h('h3', null, cat),
       h('div', { class: 'chips' }, qs.map(q => h('button', {
         class: 'chip', disabled: S.asked.includes(q.id),
-        onclick: () => { S.asked.push(q.id); render(); document.querySelector('.chat')?.lastElementChild?.scrollIntoView({ block: 'nearest' }); },
+        onclick: () => { S.asked.push(q.id); render(); },
       }, q.q))),
     ]),
     next('신체검사로'),
@@ -256,7 +266,6 @@ function orderTest(id) {
   S.ordered.push(id);
   S.lastTest = id;
   render();
-  document.querySelector('.results')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function resultCard(id, open) {
@@ -272,7 +281,7 @@ function resultCard(id, open) {
 function renderPersuade() {
   const R = C.refusal, st = S.refusal;
   const tname = catalog.tests.find(t => t.id === R.test).name;
-  const log = st.log.flatMap(l => [h('div', { class: 'bubble q' }, l.msg), h('div', { class: 'bubble a' }, l.reply), l.feedback && h('p', { class: 'muted small' }, '💬 ' + l.feedback)]);
+  const log = st.log.flatMap(l => [h('div', { class: 'bubble q' }, l.msg), h('div', { class: 'bubble a' }, l.reply), l.feedback && h('p', { class: 'muted small' }, '피드백: ' + l.feedback)]);
   return h('div', { class: 'card persuade' },
     h('h3', null, `보호자가 ${tname}을(를) 망설여요`),
     h('div', { class: 'bubble a' }, R.owner),
@@ -391,7 +400,7 @@ function renderResult() {
     h('h2', null, '해설'),
     h('h3', null, '진단'),
     h('div', { class: 'explain' }, C.dx.map((d, i) => h('div', { class: 'ex ' + d.role },
-      h('div', { class: 'row between' }, h('b', null, d.t), h('span', { class: 'tag tiny' }, ROLE[d.role])),
+      h('div', { class: 'row between' }, h('b', null, d.t), h('span', { class: 'tag tiny ' + d.role }, ROLE[d.role])),
       h('p', null, d.why),
       h('p', { class: 'muted small' }, [S.ddx1.includes(i) && '1차 감별에 넣음', S.final.includes(i) && '확정진단으로 고름'].filter(Boolean).join(' · '))))),
     h('h3', null, '검사'),
@@ -403,7 +412,7 @@ function renderResult() {
     C.refusal && [h('h3', null, '보호자 설득 모범 예시'), h('p', null, C.refusal.model)],
     h('h3', null, '처치'),
     C.tx.map((g, gi) => [h('h4', null, g.group), g.options.map((o, oi) => h('div', { class: 'ex ' + (o.ok ? 'final' : 'no') },
-      h('div', { class: 'row between' }, h('b', null, o.t), h('span', { class: 'tag tiny' }, (o.ok ? '적절' : '부적절') + ((S.tx[gi] || []).includes(oi) ? ' · 선택함' : ''))),
+      h('div', { class: 'row between' }, h('b', null, o.t), h('span', { class: 'tag tiny ' + (o.ok ? 'final' : 'no') }, (o.ok ? '적절' : '부적절') + ((S.tx[gi] || []).includes(oi) ? ' · 선택함' : ''))),
       h('p', null, o.why)))]),
     C.priority && [h('h4', null, '응급 처치 순서'), h('ol', null, C.priority.steps.map(s => h('li', null, s))), h('p', { class: 'muted' }, C.priority.why)],
     h('h3', null, '핵심 정리'),
@@ -430,7 +439,7 @@ function renderSheet() {
   const sec = (title, list, empty = '아직 없음') => [h('h4', null, title), list.length ? h('ul', null, list) : h('p', { class: 'muted small' }, empty)];
   const sheet = h('div', { class: 'sheet' + (sheetOpen ? ' open' : '') },
     h('button', { class: 'handle', onclick: () => { sheetOpen = !sheetOpen; renderSheet(); } },
-      h('i'), `📋 진료 기록 (${count})`, h('span', { class: 'muted small' }, sheetOpen ? '닫기' : '열기')),
+      h('i'), h('span', { class: 'handle-title' }, icon('chart'), `진료 기록 (${count})`), h('span', { class: 'muted small' }, sheetOpen ? '닫기' : '열기')),
     sheetOpen && h('div', { class: 'sheet-body' },
       h('p', { class: 'small' }, `${spName(C.species)} · ${Object.values(C.signalment).join(' · ')}`),
       h('p', { class: 'small' }, h('b', null, '주호소 '), C.cc),
