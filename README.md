@@ -15,6 +15,7 @@ node web/test/check.mjs                   # 케이스 데이터 검사 + 채점 
 - `web/data/catalog.json` — 모든 케이스가 공유하는 질문·신체검사·검사 메뉴(비용, 소요 시간, 개/고양이 정상값과 참고범위)
 - `web/data/cases/<id>.json` — 케이스. 공통 메뉴와 **다른 것만** 적습니다. 적지 않은 검사는 정상 결과가 나오고, 수치는 참고범위로 H/L 이 자동 표시됩니다.
 - `web/engine.js` — 데이터 해석과 채점, `web/app.js` — 화면, `web/ai.js`·`web/config.js` — AI 서버 호출
+- `web/notebook.js` — 오답 노트 기록과 약점 분석(단계별·질환 계통별, 다시 풀 케이스 추천), `web/notes-view.js` — 오답 노트 화면(`#/notes`), `web/notes-store.js` — 저장소(지금은 이 기기 localStorage, 계정을 붙이면 이 파일만 교체). 새 케이스는 `notebook.js` 의 `SYSTEM` 에 계통을 적어야 검사를 통과합니다.
 
 ### 케이스 추가
 1. 기존 케이스(예: `pancreatitis-schnauzer.json`)를 복사해 고칩니다.
