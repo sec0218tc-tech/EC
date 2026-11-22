@@ -1,15 +1,17 @@
-/* Swiss: 흰 바탕, 산세리프 한 벌, 1px 괘선, 강조색은 인터내셔널 클라인 블루 하나.
+/* Swiss: 흰 바탕, IBM Plex Sans KR 한 벌, 1px 괘선, 강조색은 인터내셔널 클라인 블루 하나.
    이상값은 색이 아니라 검은 반전 라벨(H/L)로 표시한다. 검사 결과지처럼. */
 :root {
   --bg: #ffffff; --text: #111111; --muted: #5f6368; --line: #d9d9dc; --rule: #111111;
   --accent: #002fa7; --on-accent: #ffffff; --tint: #eef1fa;
   --flag-bg: #111111; --flag-fg: #ffffff;
+  --warm: #fff1c9; --warm-ink: #3d2f00; --coat: #c9a36a;
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #0e0e0f; --text: #f7f7f8; --muted: #a0a3a8; --line: #2e2f33; --rule: #f7f7f8;
     --accent: #7d9bff; --on-accent: #0e0e0f; --tint: #161b2c;
-    --flag-bg: #f7f7f8; --flag-fg: #0e0e0f; }
+    --flag-bg: #f7f7f8; --flag-fg: #0e0e0f;
+    --warm: #2a2210; --warm-ink: #ffe7a3; --coat: #b38c55; }
 }
 * { box-sizing: border-box; }
 ::selection { background: var(--accent); color: var(--on-accent); }
@@ -18,7 +20,7 @@ input, textarea { caret-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 
 body { margin: 0; background: var(--bg); color: var(--text);
-  font: 16px/1.55 "Helvetica Neue", Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   -webkit-text-size-adjust: 100%; word-break: keep-all; overflow-wrap: anywhere; }
 main { max-width: 720px; margin: 0 auto; padding: 0 16px 104px; }
 a { color: var(--accent); text-underline-offset: 3px; }
@@ -183,3 +185,25 @@ li.abn::marker { content: "■  "; font-size: .7em; }
 .sheet-body ul { margin: 0; padding-left: 18px; font-size: .88rem; }
 .backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(0,0,0,.4); }
 .toast { position: fixed; left: 16px; right: 16px; bottom: 72px; z-index: 30; background: var(--text); color: var(--bg); padding: 12px 14px; font-size: .9rem; }
+
+/* 환자 일러스트 */
+.art { display: block; width: 100%; height: auto; }
+.art .a { fill: var(--coat); } .art .k { fill: #2a1f14; } .art .p { fill: #f4e7d0; }
+.art .s { fill: none; stroke: var(--coat); stroke-width: 7; stroke-linecap: round; }
+.art .w { fill: none; stroke: #2a1f14; stroke-width: 1.5; stroke-linecap: round; }
+.art .g { stroke: var(--tint); stroke-width: 3; } .art .r { stroke: var(--rule); stroke-width: 1; }
+.patient { margin: 16px 0 0; display: grid; grid-template-columns: 150px 1fr; align-items: end; gap: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--rule); }
+.patient .art { background: var(--tint); }
+.patient .art .g { stroke: var(--tint); }
+.patient figcaption { display: grid; gap: 2px; padding-bottom: 4px; }
+.patient figcaption b { font-size: 1.35rem; line-height: 1.25; letter-spacing: -.02em; }
+.patient figcaption span { color: var(--muted); font-size: .9rem; }
+
+/* 결과 첫머리: 여기만 공부 앱처럼 따뜻하게 */
+.coach { margin: 20px 0 8px; padding: 18px 18px 14px; border-radius: 20px; background: var(--warm); color: var(--warm-ink); display: grid; grid-template-columns: 72px 1fr; column-gap: 14px; }
+.coach > * { grid-column: 2; margin: 0 0 6px; }
+.coach .coach-art { grid-column: 1; grid-row: 1 / span 3; align-self: start; }
+.coach .art .g { stroke: var(--warm); }
+.coach .art .r { stroke: var(--warm-ink); }
+.coach-head { font-size: 1.15rem; font-weight: 700; line-height: 1.4; }
+.coach b { font-weight: 700; margin-right: 4px; }
