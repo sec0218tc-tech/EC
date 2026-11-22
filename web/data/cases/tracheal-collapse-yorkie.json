@@ -87,5 +87,20 @@
   "sources": [
     { "label": "Agreement between radiography and fluoroscopy for tracheal collapse. Animals 2023", "url": "https://doi.org/10.3390/ani13091434" },
     { "label": "Keene et al. ACVIM consensus guidelines for MMVD. JVIM 2019", "url": "https://doi.org/10.1111/jvim.15488" }
-  ]
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "등급 분류와 내과 치료(진해제·스테로이드)",
+        "book": "Ettinger",
+        "topic": "Tracheal collapse"
+      },
+      {
+        "item": "스텐트·링 수술 적응증",
+        "book": "Fossum",
+        "topic": "Tracheal collapse surgery"
+      }
+    ]
+  }
 }

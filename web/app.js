@@ -2,6 +2,7 @@
 import * as E from './engine.js';
 import { askOwner, judgePersuasion, getCode, setCode } from './ai.js';
 import { patientArt } from './art.js';
+import { loadEvidence, refLine, sourcesBlock } from './evidence.js';
 
 const STEPS = ['접수', '문진', '신체검사', '문제 목록', '1차 감별진단', '추가검사', '확정진단', '처치', '결과'];
 const RESULTS_KEY = 'ec2-results';
@@ -74,6 +75,7 @@ async function route() {
   if (!id || !index.some(c => c.id === id)) { C = null; return renderHome(); }
   if (!C || C.id !== id) {
     C = await fetch(`data/cases/${id}.json`).then(r => r.json());
+    await loadEvidence();
     S = { ...E.newState(), ...store.get('ec2-state-' + id, {}) };
     view = S.step;
   }
@@ -439,7 +441,7 @@ function renderResult() {
     h('h3', null, '진단'),
     h('div', { class: 'explain' }, C.dx.map((d, i) => h('div', { class: 'ex ' + d.role },
       h('div', { class: 'row between' }, h('b', null, d.t), h('span', { class: 'tag tiny ' + d.role }, ROLE[d.role])),
-      h('p', null, d.why),
+      h('p', null, d.why), refLine(h, d.ref),
       h('p', { class: 'muted small' }, [S.ddx1.includes(i) && '1차 감별에 넣음', S.final.includes(i) && '확정진단으로 고름'].filter(Boolean).join(' · '))))),
     h('h3', null, '검사'),
     h('p', null, h('b', null, '필수: '), T.required.map(tname).join(', ')),
@@ -451,13 +453,11 @@ function renderResult() {
     h('h3', null, '처치'),
     C.tx.map((g, gi) => [h('h4', null, g.group), g.options.map((o, oi) => h('div', { class: 'ex ' + (o.ok ? 'final' : 'no') },
       h('div', { class: 'row between' }, h('b', null, o.t), h('span', { class: 'tag tiny ' + (o.ok ? 'final' : 'no') }, (o.ok ? '적절' : '부적절') + ((S.tx[gi] || []).includes(oi) ? ' · 선택함' : ''))),
-      h('p', null, o.why)))]),
+      h('p', null, o.why), refLine(h, o.ref)))]),
     C.priority && [h('h4', null, '응급 처치 순서'), h('ol', null, C.priority.steps.map(s => h('li', null, s))), h('p', { class: 'muted' }, C.priority.why)],
     h('h3', null, '핵심 정리'),
     h('ul', null, (C.points || []).map(p => h('li', null, p))),
-    h('h3', null, '출처·검수'),
-    h('p', { class: 'small' }, C.verified ? `검수 완료: ${C.verified}` : '검수 전: 수치와 약물 용량을 교과서로 확인하지 않은 케이스예요.'),
-    h('ul', { class: 'small' }, (C.sources || []).map(s => h('li', null, s.url ? h('a', { href: s.url, target: '_blank', rel: 'noopener' }, s.label) : s.label))),
+    sourcesBlock(h, C),
     h('div', { class: 'nav' },
       h('button', { class: 'btn ghost', onclick: () => { store.del('ec2-state-' + C.id); S = E.newState(); view = 0; render(); } }, '처음부터 다시'),
       h('a', { class: 'btn primary', href: '#' }, '케이스 목록')),

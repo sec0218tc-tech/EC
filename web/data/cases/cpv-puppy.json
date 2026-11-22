@@ -114,5 +114,25 @@
     "자견은 동반 기생충 감염이 흔해요. 분변 검사로 함께 확인해요."
   ],
   "verified": "",
-  "sources": [{ "label": "기존 앱 케이스 각색, 소동물 내과 교과서 수준 (교과서 대조 필요)" }]
+  "sources": [{ "label": "기존 앱 케이스 각색, 소동물 내과 교과서 수준 (교과서 대조 필요)" }],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "항생제 선택(호중구감소·패혈증 기준). ENOVAT 2024 급성 설사 지침은 초록만 읽어 파보 적용 범위를 확인 못함",
+        "book": "Ettinger",
+        "topic": "Canine parvovirus enteritis"
+      },
+      {
+        "item": "수액 볼루스 용량과 포도당 보충 농도",
+        "book": "Ettinger",
+        "topic": "Fluid therapy, Neonatal/pediatric"
+      },
+      {
+        "item": "백신 일정(AAHA 2024는 초록만 확인)",
+        "book": "Ettinger",
+        "topic": "Canine vaccination"
+      }
+    ]
+  }
 }

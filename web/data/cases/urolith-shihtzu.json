@@ -76,5 +76,20 @@
   "sources": [
     { "label": "Comparison of radiographic methods for detecting radiolucent uroliths in dogs. PLoS One 2022", "url": "https://doi.org/10.1371/journal.pone.0274087" },
     { "label": "소동물 내과 교과서 수준 (교과서 대조 필요)" }
-  ]
+  ],
+  "review": {
+    "status": "unverified",
+    "todo": [
+      {
+        "item": "스트루바이트 용해식 기간과 감염성 결석의 항생제",
+        "book": "Ettinger",
+        "topic": "Canine urolithiasis"
+      },
+      {
+        "item": "방광절개술 적응증",
+        "book": "Fossum",
+        "topic": "Cystotomy"
+      }
+    ]
+  }
 }

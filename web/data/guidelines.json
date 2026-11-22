@@ -1,0 +1,912 @@
+{
+ "_comment": "VETLIT 'consensus statements and guidelines' 목록(2026-11-22 확인, 60개)의 색인. 요약은 직접 쓴 짧은 정리이고 원문 인용이 아님. org는 제목에서 추정. read: full=전문 읽음, sections=전문 중 관련 부분만, abstract=초록만, title=제목만.",
+ "source": "https://vetlit.org/consensus-statements-and-guidelines/",
+ "checked": "2026-11-22",
+ "levels": {
+  "full": "전문 확인",
+  "sections": "전문 일부 확인",
+  "abstract": "초록만 확인",
+  "title": "제목만 확인",
+  "prior": "이전 작업에서 인용, 이번엔 재확인 안 함",
+  "textbook": "교과서 수준 지식, 교과서 미대조",
+  "user": "사용자 교과서 검수"
+ },
+ "items": [
+  {
+   "no": 1,
+   "id": "acvim-itp-correction",
+   "short": "ACVIM ITP 정정",
+   "title": "Correction to: ACVIM consensus statement on the treatment of immune thrombocytopenia in dogs and cats",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "correction",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/43062028/"
+  },
+  {
+   "no": 2,
+   "id": "cie-reply",
+   "short": "CIE 성명 답신",
+   "title": "Reply to letter re: ACVIM-endorsed statement on chronic inflammatory enteropathy",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "개",
+   "kind": "letter",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42870559/"
+  },
+  {
+   "no": 3,
+   "id": "cie-letter",
+   "short": "CIE 성명 서신",
+   "title": "Letter re: ACVIM-endorsed statement on chronic inflammatory enteropathy",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "개",
+   "kind": "letter",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42867938/"
+  },
+  {
+   "no": 4,
+   "id": "icada-cad-2026",
+   "short": "ICADA 아토피 치료 2026",
+   "title": "Treatment of Canine Atopic Dermatitis: Updated Guidelines From the International Committee on Allergic Diseases of Animals (ICADA)",
+   "org": "ICADA",
+   "year": 2026,
+   "species": "개",
+   "kind": "guideline",
+   "read": "full",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42805756/",
+   "doi": "https://doi.org/10.1111/vde.70128",
+   "cases": [
+    "atopy-frenchie"
+   ],
+   "summary": "치료를 작용 기전별로 묶고, 1단계 반응기(현재 가려움·병변을 관해까지)와 2단계 선제기(관해 유지·재발 예방)로 나눈 개정판.",
+   "key": [
+    "반응기: 경구 글루코코르티코이드(0.5 mg/kg 1일 1–2회 관해까지 후 감량)는 빠르고 넓게 듣는 권장 약 (SOR A). 장시간형 주사 스테로이드는 감량이 불가능해 가능한 한 피함",
+    "오클라시티닙·일루노시티닙(JAK 억제제)과 로키베트맙(항 IL-31)은 반응기·선제기 모두 선택지. 로키베트맙은 좁은 범위라 외이염·발 병변 같은 만성 병변엔 추가 치료가 필요",
+    "사이클로스포린·국소 타크로리무스는 효과가 느려 선제기용, 항히스타민제는 반응기 치료로 권하지 않음",
+    "국소 스테로이드: 국소 병변·귀에 반응기와 선제기 모두 권장. 관해 후 주 2회 하이드로코티손 아세포네이트로 재발까지 기간 연장(중앙값 115일 대 33일)",
+    "2차 감염은 세포검사로 확인 후 국소 소독제가 1차, 전신 항생제는 심부 농피증이나 국소 치료 실패 시. 간헐적 '펄스' 항균 치료는 피함",
+    "연중 증상이 있으면 6–10주 제한식 시험 필수. 혈청·피내 음식 알레르기 검사는 결과를 예측하지 못함. 피내·혈청 환경 알레르겐 검사는 면역요법 항원 선택용",
+    "벼룩 유행 지역은 연중 벼룩 예방. 면역요법은 환경 알레르겐이 원인인 모든 개에 권장(선제기)"
+   ]
+  },
+  {
+   "no": 5,
+   "id": "itp-eltrombopag-response",
+   "short": "ITP 엘트롬보팍 답신",
+   "title": "Response re: feline eltrombopag citation in ACVIM ITP statement",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "고양이",
+   "kind": "letter",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42765737/"
+  },
+  {
+   "no": 6,
+   "id": "itp-eltrombopag-letter",
+   "short": "ITP 엘트롬보팍 서신",
+   "title": "Citation clarification re: feline eltrombopag in ACVIM ITP statement",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "고양이",
+   "kind": "letter",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42725899/"
+  },
+  {
+   "no": 7,
+   "id": "icatcare-ckd-2026",
+   "short": "iCatCare 고양이 CKD 2026",
+   "title": "2026 iCatCare consensus guidelines on the diagnosis and management of chronic kidney disease in cats",
+   "org": "iCatCare",
+   "year": 2026,
+   "species": "고양이",
+   "kind": "consensus",
+   "read": "full",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42693626/",
+   "doi": "https://doi.org/10.1177/1098612X261466553",
+   "cases": [
+    "ckd-cat"
+   ],
+   "summary": "2016년 ISFM 지침의 개정판. 진단·IRIS 병기·식이·합병증 관리·동반질환·모니터링을 다룬다.",
+   "key": [
+    "진단: 크레아티닌 상승 + 부적절하게 낮은 요비중(<1.035) 또는 지속 질소혈증, 영상·단백뇨는 보조. 증상 있는 고양이는 3개월을 기다리지 말고 약 2주 뒤 재검으로 확인",
+    "IRIS 병기는 탈수·폐색을 교정한 안정 상태에서 2회 이상 측정한 공복 크레아티닌(±SDMA)로. 크레아티닌 <1.6 / 1.6–2.8 / 2.9–5.0 / >5.0 mg/dL, SDMA <18 / 18–25 / 26–38 / >38 µg/dL. 불일치가 지속되면 더 높은 병기",
+    "하위 병기: UPC <0.2 / 0.2–0.4 / >0.4, 수축기 혈압 <140 / 140–159 / 160–179 / ≥180 mmHg",
+    "신장 처방식(인 제한)이 생존을 늘리는 가장 강한 근거. 아플 때·입원 중엔 새 사료를 시작하지 말고 1–2주 이상에 걸쳐 전환. 처방식이 열량의 50% 이상이어도 도움",
+    "인 목표: 2기 2.5–4.5, 3기 2.5–5.0, 4기 2.5–6.0 mg/dL. 처방식 4–6주 후에도 넘으면 인 결합제",
+    "UPC >0.4 지속: 탈수가 없고 안정된 고양이에서 텔미사르탄 또는 베나제프릴. 고혈압이면 혈압을 <160으로 먼저 낮춘 뒤 단백뇨 재평가",
+    "고혈압: 목표 <140(최소 <160) mmHg, 암로디핀 0.125–0.25 mg/kg 1일 1회 또는 텔미사르탄. 1–2주 뒤 재평가",
+    "저칼륨: 경구 글루콘산칼륨·구연산칼륨 1–4 mEq/고양이 1일 2회, 산증이 있으면 구연산칼륨. 산증은 HCO3 >16 유지",
+    "구역·식욕부진: 마로피턴트, 미르타자핀(고병기는 2일 1회), 온단세트론, 카프로모렐린. 위산억제제는 궤양이 의심될 때만",
+    "빈혈은 적극 관리(다베포에틴 + 철분, 또는 몰리두스타트). NSAID는 안정된 CKD에서만 저용량 신중히, 탈수·불안정·4기에서는 피함",
+    "모니터링: 진단 후 2–4주마다, 안정되면 3–6개월마다(혈압, 요검사, CBC, 화학, T4)"
+   ]
+  },
+  {
+   "no": 8,
+   "id": "recover-firstaid-2026",
+   "short": "RECOVER 응급처치 2026",
+   "title": "RECOVER Guidelines: First Aid for Dogs and Cats. Clinical Guidelines",
+   "org": "RECOVER",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "sections",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42640813/",
+   "doi": "https://doi.org/10.1111/vec.70138",
+   "cases": [
+    "chocolate-beagle",
+    "xylitol-dog"
+   ],
+   "summary": "병원 밖 응급처치(보호자·일반인용) 권고 38개. 열사병, 질식, 화상, 독성물질 섭취, 저혈당, 출혈 등.",
+   "key": [
+    "비부식성 독성물질 섭취 후 병원 밖에서 일상적으로 구토를 유도하지 말 것(강한 권고). 과산화수소는 위장 손상 보고가 있음. 바로 병원으로",
+    "즉시 내원이 불가능하고 수의사·중독센터가 권할 때만 병원 밖 구토 유도",
+    "증상 있는 저혈당 의심(경련 중이 아닐 때): 잇몸·볼 점막에 시럽을 바르되 내원을 늦추지 않음"
+   ]
+  },
+  {
+   "no": 9,
+   "id": "recover-anaphylaxis-2026",
+   "short": "RECOVER 아나필락시스 2026",
+   "title": "RECOVER Guidelines: First Aid — acute allergy and anaphylaxis in dogs and cats",
+   "org": "RECOVER",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42640815/",
+   "doi": "https://doi.org/10.1111/vec.70137",
+   "summary": "병원 밖 급성 알레르기·아나필락시스 대응 권고 12개(초록 기준). 근거 수준은 낮거나 전문가 의견."
+  },
+  {
+   "no": 10,
+   "id": "recover-firstaid-gap-2026",
+   "short": "RECOVER 응급처치 근거 분석",
+   "title": "RECOVER Guidelines: First Aid in Dogs and Cats — evidence and knowledge gap analysis",
+   "org": "RECOVER",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42640821/"
+  },
+  {
+   "no": 11,
+   "id": "avcg-reproducibility",
+   "short": "변이 분류 재현성 연구",
+   "title": "Reproducibility of genetic variant pathogenicity classification under the Animal Variant Classification Guidelines",
+   "org": "—",
+   "year": 2026,
+   "species": "—",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42315170/"
+  },
+  {
+   "no": 12,
+   "id": "abcd-fip-2026",
+   "short": "ABCD FIP 치료 2026",
+   "title": "Update on treatment of feline infectious peritonitis: European ABCD guidelines",
+   "org": "ABCD",
+   "year": 2026,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42043241/"
+  },
+  {
+   "no": 13,
+   "id": "aaha-dm-cat-2026",
+   "short": "AAHA 고양이 당뇨 2026",
+   "title": "2026 AAHA Diabetes Management Guidelines for Cats",
+   "org": "AAHA",
+   "year": 2026,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/42014100/",
+   "doi": "https://doi.org/10.5326/JAAHA-MS-7572",
+   "summary": "2018년 판을 갱신. SGLT2 억제제, 인슐린 선택, 가정 혈당 모니터링, DKA 진단·치료를 다룸(초록 기준)."
+  },
+  {
+   "no": 14,
+   "id": "ccds-management",
+   "short": "CCDS 관리",
+   "title": "Evidence-based clinical management of canine cognitive dysfunction syndrome",
+   "org": "—",
+   "year": 2026,
+   "species": "개",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41976093/"
+  },
+  {
+   "no": 15,
+   "id": "mmvd-commentary-2026",
+   "short": "ACVIM MMVD 논평",
+   "title": "Invited commentary: ACVIM consensus guidelines on diagnosis and treatment of myxomatous mitral valve disease in dogs",
+   "org": "—",
+   "year": 2026,
+   "species": "개",
+   "kind": "commentary",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41881755/",
+   "doi": "https://doi.org/10.1016/j.jvc.2026.02.006",
+   "cases": [
+    "mmvd-maltese"
+   ]
+  },
+  {
+   "no": 16,
+   "id": "acvim-cie-2026",
+   "short": "ACVIM 만성 염증성 장병증",
+   "title": "ACVIM-endorsed consensus statement and systematic review on chronic inflammatory enteropathy",
+   "org": "ACVIM",
+   "year": 2026,
+   "species": "개",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41742497/"
+  },
+  {
+   "no": 17,
+   "id": "enovat-sap-meta",
+   "short": "ENOVAT 수술 예방 메타분석",
+   "title": "Antimicrobial prophylaxis and surgical site infections in companion animal surgery: meta-analysis for ENOVAT guidelines",
+   "org": "ENOVAT",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41705562/"
+  },
+  {
+   "no": 18,
+   "id": "ng-tube-radiograph",
+   "short": "비위관 위치 방사선 기준",
+   "title": "Radiographic guidelines for nasoesophageal and nasogastric tube position",
+   "org": "—",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41540970/"
+  },
+  {
+   "no": 19,
+   "id": "diarrhea-survey",
+   "short": "급성 설사 처방 의도 설문",
+   "title": "New graduates' and academics' intentions for canine acute diarrhoea vs antimicrobial stewardship guidelines",
+   "org": "—",
+   "year": 2026,
+   "species": "개",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41534218/"
+  },
+  {
+   "no": 20,
+   "id": "iris-crrt-2026",
+   "short": "IRIS CRRT",
+   "title": "IRIS best practice consensus guidelines on continuous renal replacement therapy",
+   "org": "IRIS",
+   "year": 2026,
+   "species": "개·고양이",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41513167/"
+  },
+  {
+   "no": 21,
+   "id": "aaha-oncology-2025",
+   "short": "AAHA 종양 2025",
+   "title": "AAHA Oncology Guidelines for Dogs and Cats",
+   "org": "AAHA",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41448590/"
+  },
+  {
+   "no": 22,
+   "id": "ccds-diagnosis-2025",
+   "short": "CCDS 진단·모니터링",
+   "title": "CCDS Working Group guidelines for diagnosis and monitoring of canine cognitive dysfunction syndrome",
+   "org": "CCDS WG",
+   "year": 2025,
+   "species": "개",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41442884/"
+  },
+  {
+   "no": 23,
+   "id": "enovat-sap-2025",
+   "short": "ENOVAT 수술 예방 항생제 2025",
+   "title": "ENOVAT 2025 guidelines for surgical antimicrobial prophylaxis in dogs and cats",
+   "org": "ENOVAT",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "sections",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41431404/",
+   "doi": "https://doi.org/10.1111/jsap.70072",
+   "cases": [
+    "foreign-body-corgi",
+    "gdv-shepherd",
+    "pyometra-maltese"
+   ],
+   "summary": "수술 종류별 예방적 항생제(SAP) 사용 권고 18개. GRADE 방법.",
+   "key": [
+    "중성화·기타 청정 연부조직 수술(위고정술 포함)은 수술 중·후 SAP를 권하지 않음",
+    "청정-오염 위장관 수술(장절개 등)은 수술 중 SAP를 조건부 권고, 수술 후 지속은 강하게 반대. 위절개만이면 SAP도 권하지 않음",
+    "오염 수술(예: 위장관 내용물 유출)은 수술 중 SAP + 수술 후 3–5일, 배양에 맞춰 조정",
+    "감염이 명백한(dirty) 수술은 이 지침의 범위 밖(치료 목적 항생제)",
+    "절개 30–60분 전 IV 투여, 긴 수술은 반감기 2배마다 추가. 세파졸린이 대표 선택지"
+   ]
+  },
+  {
+   "no": 24,
+   "id": "dm-cat-nutrition-2025",
+   "short": "고양이 당뇨 영양",
+   "title": "Guidelines for nutritional management of feline diabetes mellitus",
+   "org": "—",
+   "year": 2025,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41369075/"
+  },
+  {
+   "no": 25,
+   "id": "felinevma-dental-2025",
+   "short": "FelineVMA 구강 2025",
+   "title": "2025 FelineVMA feline oral health and dental care guidelines",
+   "org": "FelineVMA",
+   "year": 2025,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41319038/"
+  },
+  {
+   "no": 26,
+   "id": "iris-hemoperfusion-2025",
+   "short": "IRIS 혈액관류",
+   "title": "Hemoperfusion for veterinary toxicities: IRIS best practices consensus guidelines",
+   "org": "IRIS",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "consensus",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41319896/",
+   "doi": "https://doi.org/10.1016/j.tvjl.2025.106519",
+   "summary": "중독에 대한 혈액관류의 전문가 합의 권고(초록 기준). 근거가 제한적이라 대부분 전문가 의견."
+  },
+  {
+   "no": 27,
+   "id": "icatcare-dm-2025",
+   "short": "iCatCare 고양이 당뇨 2025",
+   "title": "iCatCare 2025 consensus guidelines on the diagnosis and management of diabetes mellitus in cats",
+   "org": "iCatCare",
+   "year": 2025,
+   "species": "고양이",
+   "kind": "consensus",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41224734/",
+   "doi": "https://doi.org/10.1177/1098612X251399103",
+   "summary": "고양이 당뇨의 인슐린·SGLT2 억제제 선택, CGM 모니터링, 말단비대증 등 동반질환을 다룸(초록 기준)."
+  },
+  {
+   "no": 28,
+   "id": "osteosarcoma-2025",
+   "short": "골육종 합의",
+   "title": "Osteosarcoma of the appendicular skeleton in dogs: consensus and guidelines",
+   "org": "—",
+   "year": 2025,
+   "species": "개",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41059462/"
+  },
+  {
+   "no": 29,
+   "id": "recover-newborn-2025",
+   "short": "RECOVER 신생아 소생 2025",
+   "title": "RECOVER Guidelines: Newborn Resuscitation in Dogs and Cats",
+   "org": "RECOVER",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40847797/"
+  },
+  {
+   "no": 30,
+   "id": "recover-newborn-gap",
+   "short": "RECOVER 신생아 근거 분석",
+   "title": "RECOVER Guidelines: Newborn Resuscitation — evidence and knowledge gap analysis",
+   "org": "RECOVER",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40847798/"
+  },
+  {
+   "no": 31,
+   "id": "iscaid-pyoderma-reply",
+   "short": "ISCAID 농피증 답신",
+   "title": "Response to letter on ISCAID canine pyoderma antimicrobial guidelines",
+   "org": "ISCAID",
+   "year": 2025,
+   "species": "개",
+   "kind": "letter",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40804007/"
+  },
+  {
+   "no": 32,
+   "id": "iscaid-pyoderma-comment",
+   "short": "ISCAID 농피증 논평",
+   "title": "Comments on ISCAID antimicrobial use guidelines for canine pyoderma",
+   "org": "ISCAID",
+   "year": 2025,
+   "species": "개",
+   "kind": "commentary",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40804015/"
+  },
+  {
+   "no": 33,
+   "id": "wavd-leish-2025",
+   "short": "WAVD 레슈마니아",
+   "title": "WAVD consensus statement on diagnosis, treatment and prevention of canine leishmaniosis",
+   "org": "WAVD",
+   "year": 2025,
+   "species": "개",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40745695/"
+  },
+  {
+   "no": 34,
+   "id": "felv-anz-2025",
+   "short": "FeLV (호주·뉴질랜드)",
+   "title": "FeLV infection in pet cats in Australia and New Zealand: guidelines",
+   "org": "—",
+   "year": 2025,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40716042/"
+  },
+  {
+   "no": 35,
+   "id": "kdigo-crrt-dog",
+   "short": "KDIGO 기반 CRRT",
+   "title": "Continuous renal replacement therapy: applying KDIGO guidelines in dogs with AKI",
+   "org": "—",
+   "year": 2025,
+   "species": "개",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40613773/"
+  },
+  {
+   "no": 36,
+   "id": "iscaid-pyoderma-synopsis",
+   "short": "ISCAID 농피증 요약",
+   "title": "Synopsis of ISCAID antimicrobial use guidelines for canine pyoderma",
+   "org": "ISCAID",
+   "year": 2025,
+   "species": "개",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40556037/",
+   "cases": [
+    "atopy-frenchie"
+   ]
+  },
+  {
+   "no": 37,
+   "id": "acvaa-monitoring-2025",
+   "short": "ACVAA 마취 모니터링 2025",
+   "title": "ACVAA Small Animal Anesthesia and Sedation Monitoring Guidelines 2025",
+   "org": "ACVAA",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40447502/",
+   "doi": "https://doi.org/10.1016/j.vaa.2025.03.015",
+   "summary": "개·고양이 진정·마취 중 순환·산소화·환기·체온 모니터링 권고(초록 기준)."
+  },
+  {
+   "no": 38,
+   "id": "iscaid-pyoderma-2025",
+   "short": "ISCAID 개 농피증 2025",
+   "title": "Antimicrobial use guidelines for canine pyoderma by ISCAID",
+   "org": "ISCAID",
+   "year": 2025,
+   "species": "개",
+   "kind": "guideline",
+   "read": "sections",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40338805/",
+   "doi": "https://doi.org/10.1111/vde.13342",
+   "cases": [
+    "atopy-frenchie"
+   ],
+   "summary": "개 농피증의 진단과 항균제 사용 지침(2025 개정).",
+   "key": [
+    "항생제 전에 모든 경우 세포검사",
+    "표면·표재성 농피증은 국소 항균 치료 단독이 1차(SOR A). 2–3주 뒤 재진",
+    "전신 항생제는 심부 농피증, 또는 표재성인데 국소 치료 2주 후 호전이 부족하거나 국소 치료가 불가능할 때",
+    "표재성에 전신 치료 시 2주 처방 후 재진으로 연장 결정. 예전 3–4주 고정 처방은 더는 권하지 않음. 1차 경험적 약: 클린다마이신, 세팔렉신, 세파드록실, 아목시실린-클라불란산"
+   ]
+  },
+  {
+   "no": 39,
+   "id": "recover-pcac-study",
+   "short": "CPA 후 관리 연구",
+   "title": "Post-cardiopulmonary arrest care and outcomes since RECOVER guidelines, 2012–2022",
+   "org": "—",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40230202/"
+  },
+  {
+   "no": 40,
+   "id": "ivetf-brachy-study",
+   "short": "단두종 뇌전증 연구",
+   "title": "Prevalence of structural and idiopathic epilepsy in brachycephalic dogs (IVETF context)",
+   "org": "—",
+   "year": 2025,
+   "species": "개",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/40133051/"
+  },
+  {
+   "no": 41,
+   "id": "stiko-vacc-2025",
+   "short": "StIKo Vet 백신 6판",
+   "title": "Guidelines for the vaccination of small animals, 6th edition",
+   "org": "StIKo Vet",
+   "year": 2025,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39965620/"
+  },
+  {
+   "no": 42,
+   "id": "icatcare-lutd-2025",
+   "short": "iCatCare 고양이 하부요로 2025",
+   "title": "2025 iCatCare consensus guidelines on the diagnosis and management of lower urinary tract diseases in cats",
+   "org": "iCatCare",
+   "year": 2025,
+   "species": "고양이",
+   "kind": "consensus",
+   "read": "full",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39935081/",
+   "doi": "https://doi.org/10.1177/1098612X241309176",
+   "cases": [
+    "fic-cat",
+    "cat-urethral-obstruction"
+   ],
+   "summary": "고양이 하부요로 증상(LUTS)의 진단 접근과 FIC, 요석, 요로감염, 요도폐색 관리를 다룬 합의 지침.",
+   "key": [
+    "LUTS의 원인은 FIC(약 55–65%)가 가장 흔하고 요석(10–23%), 건강한 성묘의 세균 감염은 <3%. 재발해도 원인이 같다고 가정하지 않음",
+    "요검사는 모든 경우 필수, 1시간 안에 침사 검사(늦거나 냉장하면 결정이 인공적으로 생김). 배양은 항생제 전 방광천자로. 손으로 짜서 채취는 권하지 않음",
+    "영상: 재발·중증·비전형 사례에 권장. 방사선은 골반·음경 요도까지, 초음파로는 이 부위가 안 보여 둘 다 쓰는 게 이상적",
+    "FIC는 배제 진단이며 대부분 2–7일 안에 저절로 좋아지지만 재발이 흔함. MEMO(다방면 환경 개선)가 표준 치료이고 진통을 강하게 권함. 프레드니솔론·펜토산 폴리설페이트·GAG는 효과 없음. 비폐색 FIC에 산성화·스트루바이트 식이는 일반적으로 불필요",
+    "요도폐색: 심박 <140 + 체온 <35.5 ℃면 K >8을 강하게 시사. 서맥이 없어도 ECG 권장",
+    "수액은 칼륨을 낮추는 가장 빠른 방법이라 폐색 해소 전에 바로 시작. 균형 등장액이 산증을 더 빨리 교정(칼륨 정상화 속도는 0.9% NaCl과 차이 없음). 예전 쇼크 용량은 과수화 위험으로 권하지 않고 10 mL/kg 볼루스 후 재평가",
+    "칼슘글루코네이트(10% 0.5–1.5 mL/kg, 10–20분)는 서맥 동반 고칼륨의 1차 약. 인슐린 0.2–0.5 U/kg + 1 U당 포도당 2 g",
+    "진통이 우선: 메타돈·펜타닐, 덜 심하면 부프레노르핀, 미천골 경막외. 초기 멜록시캄은 이점 없음, 해소 후 금기가 없으면 사용",
+    "3–3.5 Fr의 부드러운 도뇨관, 폐쇄형 수집 장치, 보통 24–36시간 유치. 예방적 항생제와 프라조신은 일반적으로 권하지 않음. 감압 방광천자는 논란",
+    "화장실은 고양이 수+1, 처벌 금지, 고양이 간 긴장 관리"
+   ]
+  },
+  {
+   "no": 43,
+   "id": "ctvt-2025",
+   "short": "CTVT 치료",
+   "title": "Clinical guidelines for canine transmissible venereal tumour treatment",
+   "org": "—",
+   "year": 2025,
+   "species": "개",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39805316/"
+  },
+  {
+   "no": 44,
+   "id": "avcg-2024",
+   "short": "동물 변이 분류 가이드라인",
+   "title": "Development and validation of animal variant classification guidelines",
+   "org": "—",
+   "year": 2024,
+   "species": "개·고양이 등",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39703406/"
+  },
+  {
+   "no": 45,
+   "id": "aaha-vacc-dog-2024",
+   "short": "AAHA 개 백신 (2024 개정)",
+   "title": "2022 AAHA Canine Vaccination Guidelines (2024 Update)",
+   "org": "AAHA",
+   "year": 2024,
+   "species": "개",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39480742/",
+   "doi": "https://doi.org/10.5326/JAAHA-MS-7468",
+   "cases": [
+    "cpv-puppy"
+   ],
+   "summary": "개 핵심·비핵심 백신과 접종 일정, 이행항체, 보호소 접종 등(초록 기준)."
+  },
+  {
+   "no": 46,
+   "id": "hcm-variant-corrigendum",
+   "short": "HCM 변이 분류 정정",
+   "title": "Corrigendum: classification of feline HCM-associated gene variants per ACMG guidelines",
+   "org": "—",
+   "year": 2024,
+   "species": "고양이",
+   "kind": "correction",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39188901/"
+  },
+  {
+   "no": 47,
+   "id": "glycyrrhizin-study",
+   "short": "감초 섭취 연구",
+   "title": "Glycyrrhizin intake above international guidelines and hypermineralocorticoid-like effect in dogs",
+   "org": "—",
+   "year": 2024,
+   "species": "개",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39087832/"
+  },
+  {
+   "no": 48,
+   "id": "enovat-diarrhoea-2024",
+   "short": "ENOVAT 급성 설사 2024",
+   "title": "ENOVAT guidelines for antimicrobial use in canine acute diarrhoea",
+   "org": "ENOVAT",
+   "year": 2024,
+   "species": "개",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39074542/",
+   "doi": "https://doi.org/10.1016/j.tvjl.2024.106208",
+   "cases": [
+    "cpv-puppy"
+   ],
+   "summary": "개 급성 설사의 항생제·프로바이오틱스 사용 권고(초록 기준). 강한 권고 4개, 조건부 3개."
+  },
+  {
+   "no": 49,
+   "id": "melanoma-corrigendum",
+   "short": "흑색종 합의 정정",
+   "title": "Corrigendum: Melanoma of the dog and cat: consensus and guidelines",
+   "org": "—",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "correction",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39015108/"
+  },
+  {
+   "no": 50,
+   "id": "aafp-intercat-2024",
+   "short": "AAFP 고양이 간 긴장 2024",
+   "title": "2024 AAFP intercat tension guidelines",
+   "org": "AAFP",
+   "year": 2024,
+   "species": "고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/39012263/",
+   "cases": [
+    "fic-cat"
+   ]
+  },
+  {
+   "no": 51,
+   "id": "recover-cpr-2024",
+   "short": "RECOVER CPR 2024",
+   "title": "2024 RECOVER Guidelines: updated treatment recommendations for CPR in dogs and cats",
+   "org": "RECOVER",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38924627/"
+  },
+  {
+   "no": 52,
+   "id": "recover-als-2024",
+   "short": "RECOVER 전문소생술",
+   "title": "2024 RECOVER Guidelines: Advanced Life Support — evidence and knowledge gap analysis",
+   "org": "RECOVER",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38924633/"
+  },
+  {
+   "no": 53,
+   "id": "recover-bls-2024",
+   "short": "RECOVER 기본소생술",
+   "title": "2024 RECOVER Guidelines: Basic Life Support — evidence and knowledge gap analysis",
+   "org": "RECOVER",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38924625/"
+  },
+  {
+   "no": 54,
+   "id": "recover-monitoring-2024",
+   "short": "RECOVER 모니터링",
+   "title": "2024 RECOVER Guidelines: Monitoring — evidence and knowledge gap analysis",
+   "org": "RECOVER",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38924672/"
+  },
+  {
+   "no": 55,
+   "id": "aaha-fluid-2024",
+   "short": "AAHA 수액 2024",
+   "title": "2024 AAHA Fluid Therapy Guidelines for Dogs and Cats",
+   "org": "AAHA",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "abstract",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38885492/",
+   "doi": "https://doi.org/10.5326/JAAHA-MS-7444",
+   "summary": "수액 종류·경로·속도, 소생·재수화·유지, 마취 중 감량, 질환별 수액 전략(초록 기준)."
+  },
+  {
+   "no": 56,
+   "id": "wsava-repro-2024",
+   "short": "WSAVA 번식 조절 2024",
+   "title": "WSAVA guidelines for the control of reproduction in dogs and cats",
+   "org": "WSAVA",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "guideline",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38804079/",
+   "doi": "https://doi.org/10.1111/jsap.13724",
+   "cases": [
+    "pyometra-maltese"
+   ]
+  },
+  {
+   "no": 57,
+   "id": "acvim-itp-tx-2024",
+   "short": "ACVIM ITP 치료",
+   "title": "ACVIM consensus statement on the treatment of immune thrombocytopenia in dogs and cats",
+   "org": "ACVIM",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38779941/"
+  },
+  {
+   "no": 58,
+   "id": "omeprazole-study",
+   "short": "오메프라졸 처방 연구",
+   "title": "Omeprazole prescription before and after ACVIM statement on GI protectants",
+   "org": "—",
+   "year": 2024,
+   "species": "개",
+   "kind": "study",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38774912/"
+  },
+  {
+   "no": 59,
+   "id": "acvim-itp-dx-2024",
+   "short": "ACVIM ITP 진단",
+   "title": "ACVIM consensus statement on the diagnosis of immune thrombocytopenia in dogs and cats",
+   "org": "ACVIM",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38752421/"
+  },
+  {
+   "no": 60,
+   "id": "melanoma-2024",
+   "short": "흑색종 합의",
+   "title": "Melanoma of the dog and cat: consensus and guidelines",
+   "org": "—",
+   "year": 2024,
+   "species": "개·고양이",
+   "kind": "consensus",
+   "read": "title",
+   "url": "https://pubmed.ncbi.nlm.nih.gov/38645640/"
+  }
+ ],
+ "nextCases": [
+  {
+   "topic": "고양이 당뇨 (신규 진단 또는 DKA)",
+   "refs": [
+    "aaha-dm-cat-2026",
+    "icatcare-dm-2025",
+    "dm-cat-nutrition-2025"
+   ]
+  },
+  {
+   "topic": "개 면역매개성 혈소판감소증 (ITP)",
+   "refs": [
+    "acvim-itp-dx-2024",
+    "acvim-itp-tx-2024"
+   ]
+  },
+  {
+   "topic": "개 만성 염증성 장병증",
+   "refs": [
+    "acvim-cie-2026"
+   ]
+  },
+  {
+   "topic": "개 급성 설사, 항생제 쓰지 않는 관리",
+   "refs": [
+    "enovat-diarrhoea-2024"
+   ]
+  },
+  {
+   "topic": "고양이 전염성 복막염 (FIP)",
+   "refs": [
+    "abcd-fip-2026"
+   ]
+  },
+  {
+   "topic": "백신 후 아나필락시스",
+   "refs": [
+    "recover-anaphylaxis-2026"
+   ]
+  },
+  {
+   "topic": "심폐정지와 CPR",
+   "refs": [
+    "recover-cpr-2024"
+   ]
+  },
+  {
+   "topic": "노령견 인지기능장애",
+   "refs": [
+    "ccds-diagnosis-2025",
+    "ccds-management"
+   ]
+  }
+ ]
+}

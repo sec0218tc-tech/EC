@@ -1,0 +1,12 @@
+/* 근거 표시 (evidence.js). 확인 수준은 테두리 굵기·채움으로 구분하고 강조색 하나만 쓴다. */
+.ev-line { margin: 4px 0 0; font-size: .75rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.ev-ref { color: var(--accent); text-decoration: none; white-space: nowrap; }
+.ev-ref:hover { text-decoration: underline; }
+.ev-badge { display: inline-block; margin-left: 6px; padding: 0 5px; font-size: .7rem; font-weight: 700; line-height: 1.5;
+  border: 1px solid currentColor; color: var(--muted); white-space: nowrap; vertical-align: 1px; }
+.ev-line > .ev-badge:first-child { margin-left: 0; }
+.ev-badge.lv-user, .ev-badge.lv-full { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ev-badge.lv-sections { color: var(--accent); }
+.ev-badge.lv-abstract, .ev-badge.lv-title, .ev-badge.lv-prior { border-style: dashed; }
+.ev-badge.lv-textbook { border-style: dotted; font-weight: 400; }
+.ev-list li { margin: 4px 0; }
